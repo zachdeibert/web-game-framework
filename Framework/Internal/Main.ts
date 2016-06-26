@@ -6,42 +6,53 @@ namespace Framework.Internal {
     import Screen = Framework.Graphics.Screen;
 
     export class Main {
-        public static main() {
-            let info: SiteInfo = new SiteInfo();
-            info.addEventListener("load", () => {
-                document.title = info.title;
-                let c = new Canvas();
-                eval("window." + info.main).main(c);
-            });
-            info.pull();
-            let screen = new Screen();
-            let rotate = document.getElementById("rotate");
-            let fullscreen = document.getElementById("enterFullscreen");
-            let canvas = document.getElementById("canvas");
-            var isFullscreen = false;
-            screen.addEventListener("resize", () => {
-                rotate.classList.remove("active");
-                fullscreen.classList.remove("active");
-                canvas.classList.remove("active");
-                document.documentElement.classList.remove("scroll");
-                if ( !screen.landscape ) {
-                    if ( isFullscreen ) {
-                        document.documentElement.scrollTop = document.body.scrollTop = 0;
-                        isFullscreen = false;
-                    }
-                    rotate.classList.add("active");
-                } else if ( isFullscreen ) {
-                    canvas.classList.add("active");
-                } else {
-                    fullscreen.classList.add("active");
-                    document.documentElement.classList.add("scroll");
+        private info: SiteInfo;
+        private screen: Screen;
+        private rotatePanel: HTMLElement;
+        private fullscreenPanel: HTMLElement;
+        private canvasPanel: HTMLElement;
+        private isFullscreen: boolean;
+
+        public screenResized() {
+            this.rotatePanel.classList.remove("active");
+            this.fullscreenPanel.classList.remove("active");
+            this.canvasPanel.classList.remove("active");
+            document.documentElement.classList.remove("scroll");
+            if ( !this.screen.landscape ) {
+                if ( this.isFullscreen ) {
+                    document.documentElement.scrollTop = document.body.scrollTop = 0;
+                    this.isFullscreen = false;
                 }
+                this.rotatePanel.classList.add("active");
+            } else if ( this.isFullscreen ) {
+                this.canvasPanel.classList.add("active");
+            } else {
+                this.fullscreenPanel.classList.add("active");
+                document.documentElement.classList.add("scroll");
+            }
+        }
+
+        public screenScrolled() {
+            this.isFullscreen = document.documentElement.scrollTop >= document.body.clientHeight - window.screen.height || document.body.scrollTop >= document.body.clientHeight - window.screen.height;
+            this.screenResized();
+        }
+
+        public constructor() {
+            this.info = new SiteInfo();
+            this.info.addEventListener("load", () => {
+                document.title = this.info.title;
+                let c = new Canvas();
+                eval("window." + this.info.main).main(c);
             });
-            window.addEventListener("scroll", () => {
-                isFullscreen = document.documentElement.scrollTop >= document.body.clientHeight - window.screen.height || document.body.scrollTop >= document.body.clientHeight - window.screen.height;
-                screen.dispatchEvent(new Event("resize"));
-            });
-            screen.probe();
+            this.info.pull();
+            this.screen = new Screen();
+            this.rotatePanel = document.getElementById("rotate");
+            this.fullscreenPanel = document.getElementById("enterFullscreen");
+            this.canvasPanel = document.getElementById("canvas");
+            this.isFullscreen = false;
+            this.screen.addEventListener("resize", () => this.screenResized());
+            window.addEventListener("scroll", () => this.screenScrolled());
+            this.screen.probe();
         }
     }
 }
