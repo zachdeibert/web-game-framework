@@ -12,8 +12,13 @@ namespace Framework.Internal {
         private fullscreenPanel: HTMLElement;
         private canvasPanel: HTMLElement;
         private isFullscreen: boolean;
+        private canvas: Canvas;
 
         public screenResized() {
+            this.canvas.setBounds(new Rectangle(new Point(0, 0), new Dimension(document.body.clientWidth, document.body.clientHeight)));
+        }
+
+        public screenChanged() {
             this.rotatePanel.classList.remove("active");
             this.fullscreenPanel.classList.remove("active");
             this.canvasPanel.classList.remove("active");
@@ -34,15 +39,14 @@ namespace Framework.Internal {
 
         public screenScrolled() {
             this.isFullscreen = document.documentElement.scrollTop >= document.body.clientHeight - window.screen.height || document.body.scrollTop >= document.body.clientHeight - window.screen.height;
-            this.screenResized();
+            this.screenChanged();
         }
 
         public constructor() {
             this.info = new SiteInfo();
             this.info.addEventListener("load", () => {
                 document.title = this.info.title;
-                let c = new Canvas();
-                eval("window." + this.info.main).main(c);
+                eval("window." + this.info.main).main(this.canvas);
             });
             this.info.pull();
             this.screen = new Screen();
@@ -50,7 +54,10 @@ namespace Framework.Internal {
             this.fullscreenPanel = document.getElementById("enterFullscreen");
             this.canvasPanel = document.getElementById("canvas");
             this.isFullscreen = false;
-            this.screen.addEventListener("resize", () => this.screenResized());
+            this.canvas = new Canvas();
+            this.screenResized();
+            this.screen.addEventListener("resize", () => this.screenChanged());
+            window.addEventListener("resize", () => this.screenResized());
             window.addEventListener("scroll", () => this.screenScrolled());
             this.screen.probe();
         }

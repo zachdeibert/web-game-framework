@@ -3,10 +3,12 @@ namespace Framework.Internal {
     import Font = Framework.Graphics.Font;
     import Frame = Framework.Graphics.Frame;
     import FontFamily = Framework.Graphics.FontFamily;
+    import Rectangle = Framework.Graphics.Rectangle;
     import RenderContext = Framework.Graphics.RenderContext;
     import Shadow = Framework.Graphics.Shadow;
 
     export class Canvas extends Frame {
+        public canvas: HTMLCanvasElement;
         public g: RenderContext;
         public repainting: boolean;
 
@@ -22,9 +24,16 @@ namespace Framework.Internal {
             }
         }
 
+        public setBounds(rect: Rectangle) {
+            this.canvas.width = rect.size.width;
+            this.canvas.height = rect.size.height;
+            super.setBounds(rect);
+        }
+
         public constructor() {
             super();
-            this.g = new RenderContext((document.getElementById("canvas") as HTMLCanvasElement).getContext("2d"));
+            this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
+            this.g = new RenderContext(this.canvas.getContext("2d"));
             this.repainting = false;
             this.setBackground(new Color(255, 255, 255));
             this.setForeground(new Color(0, 0, 0));
