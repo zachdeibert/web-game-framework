@@ -8,11 +8,15 @@ namespace Example {
             let View = Framework.Graphics.View;
 
             let view = new View("exampleView");
-            let lbl = new Label("Hello, world!");
+            let lbl = new Label("Hello, world! (0 seconds elapsed)");
             lbl.setBounds(new Rectangle(new Point(0, 0), new Dimension(640, 480)));
             view.add(lbl);
             frame.add(view);
             frame.openView("exampleView");
+            var time = 0;
+            setInterval(() => {
+                lbl.setText("Hello, world! (" + ++time + " seconds elapsed)");
+            }, 1000);
         }
     }
 }
