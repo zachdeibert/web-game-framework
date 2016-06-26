@@ -123,6 +123,13 @@ namespace Framework.Graphics {
             }
         }
 
+        public initEvent(type: string, comparator: LocationComparator, exclude?: Container) {
+            let parent: Container = this.getParent();
+            if ( parent != null ) {
+                parent.initEvent(type, comparator);
+            }
+        }
+
         public constructor() {
             super();
             this.repaintPeriod = -1;
