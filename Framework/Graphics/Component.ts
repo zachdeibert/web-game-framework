@@ -8,6 +8,8 @@ namespace Framework.Graphics {
         private font: Font;
         private parent: Container;
         private bounds: Rectangle;
+        private repaintPeriod: number;
+        private repaintHandle: number;
 
         public getBackground(): Color | Gradient {
             return this.background || this.getParent().getBackground();
@@ -81,6 +83,23 @@ namespace Framework.Graphics {
             this.repaint();
         }
 
+        public getRepaintPeriod(): number {
+            return this.repaintPeriod;
+        }
+
+        public setRepaintPeriod(period: number) {
+            if ( this.repaintHandle >= 0 ) {
+                clearTimeout(this.repaintHandle);
+                this.repaintHandle = -1;
+            }
+            if ( period >= 0 ) {
+                this.repaintPeriod = period;
+                this.repaintHandle = setInterval(() => this.repaint(), period);
+            } else {
+                this.repaintPeriod = -1;
+            }
+        }
+
         public paint(g: RenderContext) {
         }
 
@@ -100,6 +119,11 @@ namespace Framework.Graphics {
             if ( parent != null ) {
                 parent.repaintChild(this);
             }
+        }
+
+        public constructor() {
+            this.repaintPeriod = -1;
+            this.repaintHandle = -1;
         }
     }
 }
