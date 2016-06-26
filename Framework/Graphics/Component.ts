@@ -1,5 +1,7 @@
 namespace Framework.Graphics {
-    export class Component {
+    import EventDispatcher = Framework.EventDispatcher;
+
+    export class Component extends EventDispatcher {
         private background: Color | Gradient;
         private foreground: Color | Gradient;
         private border: Color | Gradient;
@@ -122,6 +124,7 @@ namespace Framework.Graphics {
         }
 
         public constructor() {
+            super();
             this.repaintPeriod = -1;
             this.repaintHandle = -1;
         }

@@ -1,9 +1,11 @@
 namespace Framework.Internal {
     import Color = Framework.Graphics.Color;
+    import Container = Framework.Graphics.Container;
     import Dimension = Framework.Graphics.Dimension;
     import Font = Framework.Graphics.Font;
     import Frame = Framework.Graphics.Frame;
     import FontFamily = Framework.Graphics.FontFamily;
+    import LocationComparator = Framework.Graphics.LocationComparator;
     import Point = Framework.Graphics.Point;
     import Rectangle = Framework.Graphics.Rectangle;
     import RenderContext = Framework.Graphics.RenderContext;
@@ -34,6 +36,11 @@ namespace Framework.Internal {
 
         public resetBounds() {
             this.setBounds(new Rectangle(new Point(0, 0), new Dimension(this.canvas.clientWidth, this.canvas.clientHeight)));
+        }
+
+        public initEvent(type: string, comparator: LocationComparator, exclude?: Container) {
+            super.initEvent(type, comparator, exclude);
+            this.canvas.addEventListener(type, (e: Event) => this.dispatchEvent(e));
         }
 
         public constructor() {

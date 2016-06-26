@@ -31,7 +31,7 @@ namespace Framework.Graphics {
         public clear(rect?: Rectangle) {
             let real: Rectangle = rect == null ? this.clip : this.getRealRectangle(rect);
             if ( real != null ) {
-                this.ctx.clearRect(real.minX(), real.minY(), real.width(), real.height());
+                this.ctx.fillRect(real.minX(), real.minY(), real.width(), real.height());
             }
         }
 

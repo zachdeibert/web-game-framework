@@ -14,6 +14,7 @@ namespace Game {
             super();
             this.time = 0;
             this.setRepaintPeriod(1000);
+            this.addEventListener("click", () => this.time += 1000);
         }
     }
 }

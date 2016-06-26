@@ -53,6 +53,27 @@ namespace Framework.Graphics {
             return this.children;
         }
 
+        public initEvent(type: string, comparator: LocationComparator, exclude?: Container) {
+            let parent: Container = this.getParent();
+            if ( parent && parent != exclude ) {
+                parent.initEvent(type, comparator, this);
+            }
+            let children: Component[] = this.getChildren();
+            for ( var i = 0; i < children.length; ++i ) {
+                if ( children[i] != exclude && children[i] instanceof Container ) {
+                    (children[i] as Container).initEvent(type, comparator, this);
+                }
+            }
+            this.addEventListener(type, (e: Event) => {
+                let children: Component[] = this.getChildren();
+                for ( var i = 0; i < children.length; ++i ) {
+                    if ( comparator(e, children[i]) ) {
+                        children[i].dispatchEvent(e);
+                    }
+                }
+            });
+        }
+
         public constructor() {
             super();
             this.children = [];
