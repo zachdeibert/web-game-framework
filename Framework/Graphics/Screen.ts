@@ -1,4 +1,4 @@
-namespace Framework {
+namespace Framework.Graphics {
     import EventDispatcher = Framework.EventDispatcher;
 
     export class Screen extends EventDispatcher {

@@ -1,4 +1,6 @@
 namespace Framework.Internal {
+    import Screen = Framework.Graphics.Screen;
+
     export class Main {
         public static main() {
             let info: SiteInfo = new SiteInfo();
