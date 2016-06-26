@@ -17,6 +17,10 @@ namespace Framework.Internal {
                 canvas.classList.remove("active");
                 document.documentElement.classList.remove("scroll");
                 if ( !screen.landscape ) {
+                    if ( isFullscreen ) {
+                        document.documentElement.scrollTop = document.body.scrollTop = 0;
+                        isFullscreen = false;
+                    }
                     rotate.classList.add("active");
                 } else if ( isFullscreen ) {
                     canvas.classList.add("active");
