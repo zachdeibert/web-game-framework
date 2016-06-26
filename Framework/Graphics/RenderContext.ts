@@ -209,14 +209,14 @@ namespace Framework.Graphics {
         }
 
         public drawText(text: string, p: Point, maxWidth: number = this.clip.size.width) {
-            let real: Rectangle = this.getRealRectangle(new Rectangle(p, new Dimension(maxWidth, 0)));
+            let real: Rectangle = this.getRealRectangle(new Rectangle(p, new Dimension(maxWidth, 1)));
             if ( real != null ) {
                 this.ctx.strokeText(text, real.location.x, real.location.y, real.size.width);
             }
         }
 
         public fillText(text: string, p: Point, maxWidth: number = this.clip.size.width) {
-            let real: Rectangle = this.getRealRectangle(new Rectangle(p, new Dimension(maxWidth, 0)));
+            let real: Rectangle = this.getRealRectangle(new Rectangle(p, new Dimension(maxWidth, 1)));
             if ( real != null ) {
                 this.ctx.fillText(text, real.location.x, real.location.y, real.size.width);
             }
