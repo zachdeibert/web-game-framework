@@ -10,6 +10,11 @@ namespace Framework.Internal {
         public g: RenderContext;
         public repainting: boolean;
 
+        public update(g: RenderContext) {
+            super.update(g);
+            this.repainting = false;
+        }
+
         public repaint() {
             if ( !this.repainting ) {
                 this.repainting = true;
