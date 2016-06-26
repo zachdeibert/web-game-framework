@@ -2,18 +2,27 @@ html, body, canvas, div {
     margin: 0;
     padding: 0;
     width: 100vw;
-    height: 100vh;
+    height: auto;
     overflow: hidden;
+}
+html {
+    max-height: 100vh;
+    overflow-y: scroll;
+}
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1;
+    background-color: #FFFFFF;
+}
+div {
+    z-index: 0;
 }
 canvas, div {
     display: none;
 }
 div div, div canvas, canvas div, canvas canvas, canvas.active, div.active {
     display: block;
-}
-.scroll {
-    overflow-y: scroll;
-}
-.scroll, .scroll body, .scroll canvas, .scroll div {
-    height: auto;
 }

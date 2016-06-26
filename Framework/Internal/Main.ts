@@ -15,30 +15,31 @@ namespace Framework.Internal {
         private canvas: Canvas;
 
         public screenResized() {
-            this.canvas.setBounds(new Rectangle(new Point(0, 0), new Dimension(document.body.clientWidth, document.body.clientHeight)));
+            this.canvas.resetBounds();
         }
 
         public screenChanged() {
-            this.rotatePanel.classList.remove("active");
-            this.fullscreenPanel.classList.remove("active");
-            this.canvasPanel.classList.remove("active");
-            document.documentElement.classList.remove("scroll");
             if ( !this.screen.landscape ) {
                 if ( this.isFullscreen ) {
                     document.documentElement.scrollTop = document.body.scrollTop = 0;
                     this.isFullscreen = false;
                 }
+                this.fullscreenPanel.classList.remove("active");
+                this.canvasPanel.classList.remove("active");
                 this.rotatePanel.classList.add("active");
             } else if ( this.isFullscreen ) {
                 this.canvasPanel.classList.add("active");
+                this.screenResized();
             } else {
+                this.rotatePanel.classList.remove("active");
+                this.canvasPanel.classList.remove("active");
                 this.fullscreenPanel.classList.add("active");
-                document.documentElement.classList.add("scroll");
             }
         }
 
         public screenScrolled() {
-            this.isFullscreen = document.documentElement.scrollTop >= document.body.clientHeight - window.screen.height || document.body.scrollTop >= document.body.clientHeight - window.screen.height;
+            let target: number = (this.fullscreenPanel.clientHeight - screen.height) / 2;
+            this.isFullscreen = document.documentElement.scrollTop >= target || document.body.scrollTop >= target;
             this.screenChanged();
         }
 
@@ -58,7 +59,10 @@ namespace Framework.Internal {
             this.screenResized();
             this.screen.addEventListener("resize", () => this.screenChanged());
             window.addEventListener("resize", () => this.screenResized());
-            window.addEventListener("scroll", () => this.screenScrolled());
+            window.addEventListener("scroll", (e: UIEvent) => {
+                this.screenScrolled();
+                e.preventDefault();
+            });
             this.screen.probe();
         }
     }

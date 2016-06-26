@@ -1,8 +1,10 @@
 namespace Framework.Internal {
     import Color = Framework.Graphics.Color;
+    import Dimension = Framework.Graphics.Dimension;
     import Font = Framework.Graphics.Font;
     import Frame = Framework.Graphics.Frame;
     import FontFamily = Framework.Graphics.FontFamily;
+    import Point = Framework.Graphics.Point;
     import Rectangle = Framework.Graphics.Rectangle;
     import RenderContext = Framework.Graphics.RenderContext;
     import Shadow = Framework.Graphics.Shadow;
@@ -30,6 +32,10 @@ namespace Framework.Internal {
             super.setBounds(rect);
         }
 
+        public resetBounds() {
+            this.setBounds(new Rectangle(new Point(0, 0), new Dimension(this.canvas.clientWidth, this.canvas.clientHeight)));
+        }
+
         public constructor() {
             super();
             this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -41,6 +47,10 @@ namespace Framework.Internal {
             this.setStroke(new Color(255, 0, 0));
             this.setShadow(new Shadow(new Color(0, 0, 0), 0));
             this.setFont(new Font(FontFamily.caption));
+            this.canvas.addEventListener("touchstart", e => e.preventDefault());
+            this.canvas.addEventListener("touchend", e => e.preventDefault());
+            this.canvas.addEventListener("touchcancel", e => e.preventDefault());
+            this.canvas.addEventListener("touchmove", e => e.preventDefault());
         }
     }
 }
