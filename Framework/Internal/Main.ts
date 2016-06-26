@@ -1,4 +1,8 @@
 namespace Framework.Internal {
+    import Dimension = Framework.Graphics.Dimension;
+    import Label = Framework.Graphics.Label;
+    import Point = Framework.Graphics.Point;
+    import Rectangle = Framework.Graphics.Rectangle;
     import Screen = Framework.Graphics.Screen;
 
     export class Main {
@@ -36,6 +40,10 @@ namespace Framework.Internal {
                 screen.dispatchEvent(new Event("resize"));
             });
             screen.probe();
+            let c = new Canvas();
+            let l = new Label("Hello, world!");
+            l.setBounds(new Rectangle(new Point(0, 0), new Dimension(640, 480)));
+            c.add(l);
         }
     }
 }
