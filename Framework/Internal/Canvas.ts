@@ -1,12 +1,12 @@
 namespace Framework.Internal {
     import Color = Framework.Graphics.Color;
-    import Container = Framework.Graphics.Container;
     import Font = Framework.Graphics.Font;
+    import Frame = Framework.Graphics.Frame;
     import FontFamily = Framework.Graphics.FontFamily;
     import RenderContext = Framework.Graphics.RenderContext;
     import Shadow = Framework.Graphics.Shadow;
 
-    export class Canvas extends Container {
+    export class Canvas extends Frame {
         public g: RenderContext;
         public repainting: boolean;
 

@@ -10,6 +10,8 @@ namespace Framework.Internal {
             let info: SiteInfo = new SiteInfo();
             info.addEventListener("load", () => {
                 document.title = info.title;
+                let c = new Canvas();
+                eval("window." + info.main).main(c);
             });
             info.pull();
             let screen = new Screen();
@@ -40,10 +42,6 @@ namespace Framework.Internal {
                 screen.dispatchEvent(new Event("resize"));
             });
             screen.probe();
-            let c = new Canvas();
-            let l = new Label("Hello, world!");
-            l.setBounds(new Rectangle(new Point(0, 0), new Dimension(640, 480)));
-            c.add(l);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Framework.Internal {
     export class SiteInfo extends EventDispatcher {
         private xmlhttp: XMLHttpRequest;
         public title: string;
+        public main: string;
 
         public pull(): void {
             this.xmlhttp.send();
@@ -24,6 +25,7 @@ namespace Framework.Internal {
                     if ( this.xmlhttp.status == 200 ) {
                         let json = JSON.parse(this.xmlhttp.responseText);
                         this.title = json.title;
+                        this.main = json.main;
                         this.dispatchEvent(new Event("load"));
                     } else {
                         throw new LoadError("Unable to get site information");

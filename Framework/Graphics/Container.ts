@@ -49,6 +49,10 @@ namespace Framework.Graphics {
             }
         }
 
+        public getChildren(): Component[] {
+            return this.children;
+        }
+
         public constructor() {
             super();
             this.children = [];
