@@ -1,4 +1,4 @@
 {
     "title": "Example Game",
-    "main": "Example.Main"
+    "main": "Game.Main"
 }
