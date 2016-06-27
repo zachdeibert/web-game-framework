@@ -11,6 +11,8 @@
         "node_modules",
         "bower_components",
         "jspm_packages",
+        "Examples",
+        "electron.js",
         "out.js"
     ]
 }

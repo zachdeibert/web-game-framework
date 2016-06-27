@@ -2,3 +2,8 @@
 *.js.map
 *.d.ts
 tmp/
+node_modules/
+bower_components/
+jspm_packages/
+
+!electron.js
