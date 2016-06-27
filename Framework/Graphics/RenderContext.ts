@@ -1,3 +1,13 @@
+/// <reference path="CapStyle.ts" />
+/// <reference path="Color.ts" />
+/// <reference path="Font.ts" />
+/// <reference path="Gradient.ts" />
+/// <reference path="IMedia.ts" />
+/// <reference path="JoinStyle.ts" />
+/// <reference path="Point.ts" />
+/// <reference path="Rectangle.ts" />
+/// <reference path="Shadow.ts" />
+
 namespace Framework.Graphics {
     export class RenderContext {
         private ctx: CanvasRenderingContext2D;

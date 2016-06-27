@@ -1,3 +1,7 @@
+/// <reference path="Component.ts" />
+/// <reference path="Point.ts" />
+/// <reference path="RenderContext.ts" />
+
 namespace Framework.Graphics {
     export class Label extends Component {
         private text: string;

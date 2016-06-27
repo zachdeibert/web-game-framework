@@ -1,3 +1,5 @@
+/// <reference path="Container.ts" />
+
 namespace Framework.Graphics {
     export class View extends Container {
         private id: string | number;

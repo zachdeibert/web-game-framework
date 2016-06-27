@@ -1,3 +1,6 @@
+/// <reference path="../EventDispatcher.ts" />
+/// <reference path="LoadError.ts" />
+
 namespace Framework.Internal {
     import EventDispatcher = Framework.EventDispatcher;
 

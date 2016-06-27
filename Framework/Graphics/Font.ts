@@ -1,3 +1,10 @@
+/// <reference path="FontFamily.ts" />
+/// <reference path="FontStyle.ts" />
+/// <reference path="FontVariant.ts" />
+/// <reference path="FontWeight.ts" />
+/// <reference path="TextAlign.ts" />
+/// <reference path="TextBaseline.ts" />
+
 namespace Framework.Graphics {
     export class Font {
         public style: FontStyle;

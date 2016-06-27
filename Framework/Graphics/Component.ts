@@ -1,5 +1,16 @@
+/// <reference path="../EventDispatcher.ts" />
+/// <reference path="Color.ts" />
+/// <reference path="Font.ts" />
+/// <reference path="Gradient.ts" />
+/// <reference path="LocationComparator.ts" />
+/// <reference path="Rectangle.ts" />
+/// <reference path="RenderContext.ts" />
+/// <reference path="Shadow.ts" />
+
 namespace Framework.Graphics {
     import EventDispatcher = Framework.EventDispatcher;
+    // Circular dependency to Container
+    var Container = {};
 
     export class Component extends EventDispatcher {
         private background: Color | Gradient;

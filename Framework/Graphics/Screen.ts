@@ -1,3 +1,5 @@
+/// <reference path="../EventDispatcher.ts" />
+
 namespace Framework.Graphics {
     import EventDispatcher = Framework.EventDispatcher;
 

@@ -1,3 +1,7 @@
+/// <reference path="IMedia.ts" />
+/// <reference path="Rectangle.ts" />
+/// <reference path="RenderContext.ts" />
+
 namespace Framework.Graphics {
     export class OffscreenBuffer implements IMedia {
         private canvas: HTMLCanvasElement;

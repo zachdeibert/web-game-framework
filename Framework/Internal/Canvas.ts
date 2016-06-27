@@ -1,3 +1,14 @@
+/// <reference path="../Graphics/Color.ts" />
+/// <reference path="../Graphics/Dimension.ts" />
+/// <reference path="../Graphics/Font.ts" />
+/// <reference path="../Graphics/Frame.ts" />
+/// <reference path="../Graphics/FontFamily.ts" />
+/// <reference path="../Graphics/LocationComparator.ts" />
+/// <reference path="../Graphics/Point.ts" />
+/// <reference path="../Graphics/Rectangle.ts" />
+/// <reference path="../Graphics/RenderContext.ts" />
+/// <reference path="../Graphics/Shadow.ts" />
+
 namespace Framework.Internal {
     import Color = Framework.Graphics.Color;
     import Container = Framework.Graphics.Container;

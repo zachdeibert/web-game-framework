@@ -1,3 +1,6 @@
+/// <reference path="Color.ts" />
+
+
 namespace Framework.Graphics {
     export class Gradient {
         private obj: CanvasGradient;

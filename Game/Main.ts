@@ -1,3 +1,13 @@
+/// <reference path="../Framework/Graphics/Color.ts" />
+/// <reference path="../Framework/Graphics/Component.ts" />
+/// <reference path="../Framework/Graphics/Dimension.ts" />
+/// <reference path="../Framework/Graphics/Frame.ts" />
+/// <reference path="../Framework/Graphics/Label.ts" />
+/// <reference path="../Framework/Graphics/Point.ts" />
+/// <reference path="../Framework/Graphics/Rectangle.ts" />
+/// <reference path="../Framework/Graphics/View.ts" />
+/// <reference path="Clock.ts" />
+
 namespace Game {
     import Color = Framework.Graphics.Color;
     import Component = Framework.Graphics.Component;

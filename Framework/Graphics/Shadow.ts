@@ -1,3 +1,6 @@
+/// <reference path="Color.ts" />
+/// <reference path="Point.ts" />
+
 namespace Framework.Graphics {
     export class Shadow {
         public color: Color;

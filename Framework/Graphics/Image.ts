@@ -1,3 +1,6 @@
+/// <reference path="IMedia.ts" />
+/// <reference path="Rectangle.ts" />
+
 namespace Framework.Graphics {
     export class Image implements IMedia {
         private image: HTMLImageElement;

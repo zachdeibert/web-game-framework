@@ -1,3 +1,11 @@
+/// <reference path="../Graphics/Dimension.ts" />
+/// <reference path="../Graphics/Label.ts" />
+/// <reference path="../Graphics/Point.ts" />
+/// <reference path="../Graphics/Rectangle.ts" />
+/// <reference path="../Graphics/Screen.ts" />
+/// <reference path="Canvas.ts" />
+/// <reference path="SiteInfo.ts" />
+
 namespace Framework.Internal {
     import Dimension = Framework.Graphics.Dimension;
     import Label = Framework.Graphics.Label;

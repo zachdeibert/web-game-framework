@@ -1,3 +1,7 @@
+/// <reference path="Component.ts" />
+/// <reference path="LocationComparator.ts" />
+/// <reference path="RenderContext.ts" />
+
 namespace Framework.Graphics {
     export class Container extends Component {
         private children: Component[];

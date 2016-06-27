@@ -1,3 +1,6 @@
+/// <reference path="IMedia.ts" />
+/// <reference path="Rectangle.ts" />
+
 namespace Framework.Graphics {
     export class Video implements IMedia {
         private video: HTMLVideoElement;

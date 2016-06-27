@@ -1,3 +1,6 @@
+/// <reference path="Dimension.ts" />
+/// <reference path="Point.ts" />
+
 namespace Framework.Graphics {
     export class Rectangle {
         public location: Point;

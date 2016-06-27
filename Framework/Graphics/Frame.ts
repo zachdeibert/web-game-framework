@@ -1,3 +1,10 @@
+/// <reference path="Component.ts" />
+/// <reference path="Container.ts" />
+/// <reference path="GraphicsError.ts" />
+/// <reference path="Rectangle.ts" />
+/// <reference path="RenderContext.ts" />
+/// <reference path="View.ts" />
+
 namespace Framework.Graphics {
     export class Frame extends Container {
         private activeId: string | number;
