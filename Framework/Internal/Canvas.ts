@@ -31,6 +31,9 @@ namespace Framework.Internal {
         public setBounds(rect: Rectangle) {
             this.canvas.width = rect.size.width;
             this.canvas.height = rect.size.height;
+            if ( !rect.isDegenerate() ) {
+                this.g = this.g.drawIn(rect, true);
+            }
             super.setBounds(rect);
         }
 

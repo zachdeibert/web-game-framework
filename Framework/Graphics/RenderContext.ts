@@ -109,8 +109,8 @@ namespace Framework.Graphics {
             return new Gradient(this.ctx, x0, y0, r0, x1, y1, r1, stops);
         }
 
-        public drawIn(rect: Rectangle): RenderContext {
-            let real: Rectangle = this.getRealRectangle(rect);
+        public drawIn(rect: Rectangle, ignoreClip?: boolean): RenderContext {
+            let real: Rectangle = ignoreClip ? rect : this.getRealRectangle(rect);
             if ( real == null ) {
                 return null;
             } else {
