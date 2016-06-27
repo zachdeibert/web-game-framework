@@ -1,6 +1,3 @@
-/// <reference path="../Framework/Graphics/Label.ts" />
-/// <reference path="../Framework/Graphics/RenderContext.ts" />
-
 namespace Game {
     import Label = Framework.Graphics.Label;
     import RenderContext = Framework.Graphics.RenderContext;

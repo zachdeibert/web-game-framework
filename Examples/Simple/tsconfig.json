@@ -3,14 +3,18 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outFile": "out.js",
-        "sourceMap": true,
-        "declaration": true
+        "outFile": "game.js",
+        "sourceMap": true
     },
     "exclude": [
         "node_modules",
         "bower_components",
         "jspm_packages",
-        "out.js"
+        "out.js",
+        "game.js"
+    ],
+    "files": [
+        "out.d.ts",
+        "Game/Main.ts"
     ]
 }

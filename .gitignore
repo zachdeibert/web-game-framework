@@ -1,2 +1,4 @@
-/out.js
-/out.js.map
+*.js
+*.js.map
+*.d.ts
+tmp/
