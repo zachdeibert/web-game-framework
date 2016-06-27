@@ -227,12 +227,15 @@ namespace Framework.Graphics {
             }
         }
 
-        public drawTangentArc(t1: Point, t2: Point, radius: number) {
-            this.pathTangentArc(t1, t2, radius);
+        public drawTangentArc(t1: Point, t2: Point, radius: number, from?: Point) {
+            this.pathTangentArc(t1, t2, radius, from);
             this.drawPath();
         }
 
-        public pathTangentArc(t1: Point, t2: Point, radius: number) {
+        public pathTangentArc(t1: Point, t2: Point, radius: number, from?: Point) {
+            if ( from ) {
+                this.setPathPos(from);
+            }
             let r1: Point = this.getRealPoint(t1);
             let r2: Point = this.getRealPoint(t2);
             if ( r1 != null && r2 != null ) {
