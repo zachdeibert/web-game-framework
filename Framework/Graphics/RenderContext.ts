@@ -41,7 +41,7 @@ namespace Framework.Graphics {
 
         protected getRealPoint(p: Point): Point {
             let t = new Point(p.x + this.clip.location.x, p.y + this.clip.location.y);
-            if ( t.x <= this.clip.maxX() && t.x >= this.clip.minX() && t.y <= this.clip.maxY() && t.y >= this.clip.maxX() ) {
+            if ( t.x <= this.clip.maxX() && t.x >= this.clip.minX() && t.y <= this.clip.maxY() && t.y >= this.clip.minY() ) {
                 return t;
             } else {
                 return null;
@@ -239,7 +239,7 @@ namespace Framework.Graphics {
             let r1: Point = this.getRealPoint(t1);
             let r2: Point = this.getRealPoint(t2);
             if ( r1 != null && r2 != null ) {
-                this.ctx.arcTo(t1.x, t1.y, t2.x, t2.y, radius);
+                this.ctx.arcTo(r1.x, r1.y, r2.x, r2.y, radius);
             }
         }
 

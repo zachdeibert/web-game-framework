@@ -36,7 +36,7 @@ namespace Game {
         public static main(frame: Frame) {
             let view: View = new View("exampleView");
             let lbl: Label = new Clock();
-            lbl.setBounds(new Rectangle(new Point(0, 0), new Dimension(320, 480)));
+            lbl.setBounds(new Rectangle(new Point(100, 100), new Dimension(320, 480)));
             view.setBounds(new Rectangle(new Point(0, 0), new Dimension(640, 480)));
             lbl.setBackground(new Color(255, 0, 0, 0.75));
             view.setBackground(new Color(0, 255, 0));

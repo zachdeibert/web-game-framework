@@ -25,6 +25,7 @@
 /// <reference path="Font.ts" />
 /// <reference path="Gradient.ts" />
 /// <reference path="LocationComparator.ts" />
+/// <reference path="Point.ts" />
 /// <reference path="Rectangle.ts" />
 /// <reference path="RenderContext.ts" />
 /// <reference path="Shadow.ts" />
@@ -38,6 +39,7 @@ namespace Framework.Graphics {
         private background: Color | Gradient;
         private foreground: Color | Gradient;
         private border: Color | Gradient;
+        private borderRadius: number;
         private stroke: Color | Gradient;
         private shadow: Shadow;
         private font: Font;
@@ -70,6 +72,15 @@ namespace Framework.Graphics {
 
         public setBorder(border: Color | Gradient) {
             this.border = border;
+            this.repaint();
+        }
+
+        public getBorderRadius(): number {
+            return this.borderRadius;
+        }
+
+        public setBorderRadius(radius: number) {
+            this.borderRadius = radius;
             this.repaint();
         }
 
@@ -143,7 +154,23 @@ namespace Framework.Graphics {
             g.setStroke(this.getBorder());
             g.setShadow(this.getShadow());
             g.setFont(this.getFont());
-            g.clear();
+            let r: number = this.getBorderRadius();
+            let b: Dimension = this.getBounds().size;
+            g.resetPath();
+            if ( r > 0 ) {
+                g.pathLine(new Point(r, 0), new Point(b.width - r, 0));
+                g.pathArc(new Point(b.width - r, r), r, Math.PI * 3 / 2, 0);
+                g.pathLine(new Point(b.width, b.height - r));
+                g.pathArc(new Point(b.width - r, b.height - r), r, 0, Math.PI / 2);
+                g.pathLine(new Point(r, b.height));
+                g.pathArc(new Point(r, b.height - r), r, Math.PI / 2, Math.PI);
+                g.pathLine(new Point(0, r));
+                g.pathArc(new Point(r, r), r, Math.PI, Math.PI * 3 / 2);
+            } else {
+                g.pathRect(new Rectangle(new Point(0, 0), b));
+            }
+            g.fillPath();
+            g.drawPath();
             g.setFill(this.getForeground());
             g.setStroke(this.getBorder());
             this.paint(g);
@@ -165,6 +192,7 @@ namespace Framework.Graphics {
 
         public constructor() {
             super();
+            this.borderRadius = 0;
             this.repaintPeriod = -1;
             this.repaintHandle = -1;
         }
