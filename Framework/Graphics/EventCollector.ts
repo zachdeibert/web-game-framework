@@ -1,4 +1,4 @@
-// DOMEvents.ts
+// EventCollector.ts
 //
 // Copyright (c) 2016 Zach Deibert
 //
@@ -20,29 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/// <reference path="Component.ts" />
-/// <reference path="Rectangle.ts" />
-
 namespace Framework.Graphics {
-    export class DOMEvents {
-        private c: Component;
-
-        public static DOMCollector(type: string, l: EventListener | EventListenerObject, element?: HTMLElement) {
-            element.addEventListener(type, l);
-        }
-
-        public static mouseComparator(e: Event, c: Component) {
-            let m: MouseEvent = e as MouseEvent;
-            let b: Rectangle = c.getBounds();
-            return m.clientX >= b.minX() && m.clientX <= b.maxX() && m.clientY >= b.minY() && m.clientY <= b.maxY();
-        }
-
-        public click() {
-            this.c.initEvent("click", DOMEvents.mouseComparator, DOMEvents.DOMCollector);
-        }
-
-        public constructor(c: Component) {
-            this.c = c;
-        }
+    export interface EventCollector {
+        (type: string, l: EventListener | EventListenerObject, element?: HTMLElement): void;
     }
 }

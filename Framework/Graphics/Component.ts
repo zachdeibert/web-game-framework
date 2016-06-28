@@ -22,6 +22,7 @@
 
 /// <reference path="../EventDispatcher.ts" />
 /// <reference path="Color.ts" />
+/// <reference path="EventCollector.ts" />
 /// <reference path="Font.ts" />
 /// <reference path="Gradient.ts" />
 /// <reference path="LocationComparator.ts" />
@@ -183,10 +184,10 @@ namespace Framework.Graphics {
             }
         }
 
-        public initEvent(type: string, comparator: LocationComparator, exclude?: Container) {
+        public initEvent(type: string, comparator: LocationComparator, collector: EventCollector, exclude?: Container) {
             let parent: Container = this.getParent();
             if ( parent != null ) {
-                parent.initEvent(type, comparator);
+                parent.initEvent(type, collector, comparator);
             }
         }
 

@@ -22,6 +22,7 @@
 
 /// <reference path="../Graphics/Color.ts" />
 /// <reference path="../Graphics/Dimension.ts" />
+/// <reference path="../Graphics/EventCollector.ts" />
 /// <reference path="../Graphics/Font.ts" />
 /// <reference path="../Graphics/Frame.ts" />
 /// <reference path="../Graphics/FontFamily.ts" />
@@ -35,6 +36,7 @@ namespace Framework.Internal {
     import Color = Framework.Graphics.Color;
     import Container = Framework.Graphics.Container;
     import Dimension = Framework.Graphics.Dimension;
+    import EventCollector = Framework.Graphics.EventCollector;
     import Font = Framework.Graphics.Font;
     import Frame = Framework.Graphics.Frame;
     import FontFamily = Framework.Graphics.FontFamily;
@@ -74,9 +76,9 @@ namespace Framework.Internal {
             this.setBounds(new Rectangle(new Point(0, 0), new Dimension(this.canvas.clientWidth, this.canvas.clientHeight)));
         }
 
-        public initEvent(type: string, comparator: LocationComparator, exclude?: Container) {
+        public initEvent(type: string, comparator: LocationComparator, collector: EventCollector, exclude?: Container) {
             super.initEvent(type, comparator, exclude);
-            this.canvas.addEventListener(type, (e: Event) => this.dispatchEvent(e));
+            collector(type, (e: Event) => this.dispatchEvent(e), this.canvas);
         }
 
         public constructor() {
