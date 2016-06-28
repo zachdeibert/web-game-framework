@@ -29,6 +29,23 @@ namespace Framework.Graphics {
         private children: Component[];
         private repaintingChildren: Component[];
         private needsFullRepaint: boolean;
+        private focusedChild: Component;
+
+        public getFocusedChild(): Component {
+            return this.isFocused() ? this.focusedChild : null;
+        }
+
+        public setFocusedChild(child: Component) {
+            let old: Component = this.getFocusedChild();
+            if ( old != null ) {
+                old.setFocused(false);
+            }
+            this.focusedChild = child;
+            if ( child != null ) {
+                this.setFocused();
+            }
+            this.repaint();
+        }
 
         public paint(g: RenderContext) {
             for ( var i: number = 0; i < this.repaintingChildren.length; ++i ) {

@@ -48,6 +48,7 @@ namespace Framework.Graphics {
         private bounds: Rectangle;
         private repaintPeriod: number;
         private repaintHandle: number;
+        private focused: boolean;
 
         public getBackground(): Color | Gradient {
             return this.background || this.getParent().getBackground();
@@ -147,6 +148,19 @@ namespace Framework.Graphics {
             }
         }
 
+        public isFocused(): boolean {
+            return this.focused;
+        }
+
+        public setFocused(v: boolean = true) {
+            this.focused = v;
+            let parent: Container = this.getParent();
+            if ( parent != null ) {
+                parent.setFocusedChild(v ? this : null);
+            }
+            this.repaint();
+        }
+
         public paint(g: RenderContext) {
         }
 
@@ -196,6 +210,8 @@ namespace Framework.Graphics {
             this.borderRadius = 0;
             this.repaintPeriod = -1;
             this.repaintHandle = -1;
+            this.focused = false;
+            this.addEventListener("click", () => this.setFocused());
         }
     }
 }
