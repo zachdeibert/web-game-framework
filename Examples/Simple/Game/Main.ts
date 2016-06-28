@@ -26,6 +26,7 @@ namespace Game {
     import Color = Framework.Graphics.Color;
     import Component = Framework.Graphics.Component;
     import Dimension = Framework.Graphics.Dimension;
+    import DOMEvents = Framework.Graphics.DOMEvents;
     import Frame = Framework.Graphics.Frame;
     import Label = Framework.Graphics.Label;
     import Point = Framework.Graphics.Point;
@@ -44,11 +45,8 @@ namespace Game {
             view.add(lbl);
             frame.add(view);
             frame.openView("exampleView");
-            frame.initEvent("click", (e: Event, c: Component) => {
-                let m: MouseEvent = e as MouseEvent;
-                let b: Rectangle = c.getBounds();
-                return m.clientX >= b.minX() && m.clientX <= b.maxX() && m.clientY >= b.minY() && m.clientY <= b.maxY();
-            });
+            let e: DOMEvents = new DOMEvents(frame);
+            e.click();
         }
     }
 }
