@@ -50,6 +50,18 @@ namespace Framework.Graphics {
             return !b.contains(new Point(m.clientX, m.clientY)) && b.contains(new Point(m.clientX - m.movementX, m.clientY - m.movementY));
         }
 
+        public static touchComparator(e: Event, c: Component): boolean {
+            let t: TouchEvent = e as TouchEvent;
+            let b: Rectangle = c.getBounds();
+            for ( var i: number = 0; i < t.touches.length; ++i ) {
+                let touch: Touch = t.touches.item(i);
+                if ( b.contains(new Point(touch.clientX, touch.clientY)) ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static focusComparator(e: Event, c: Component): boolean {
             return c.isFocused();
         }
@@ -197,6 +209,22 @@ namespace Framework.Graphics {
 
         public wheel() {
             this._("wheel", "mouse");
+        }
+
+        public touchStart() {
+            this._("touchstart", "touch");
+        }
+
+        public touchEnd() {
+            this._("touchend", "touch");
+        }
+
+        public touchCancel() {
+            this._("touchcancel", "touch");
+        }
+
+        public touchMove() {
+            this._("touchmove", "touch");
         }
 
         public constructor(c: Component) {
