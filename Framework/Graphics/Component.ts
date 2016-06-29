@@ -198,10 +198,17 @@ namespace Framework.Graphics {
             }
         }
 
+        public invalidate() {
+            let parent: Container = this.getParent();
+            if ( parent != null ) {
+                parent.invalidate();
+            }
+        }
+
         public initEvent(type: string, comparator: LocationComparator, collector: EventCollector, exclude?: Container) {
             let parent: Container = this.getParent();
             if ( parent != null ) {
-                parent.initEvent(type, collector, comparator);
+                parent.initEvent(type, comparator, collector);
             }
         }
 

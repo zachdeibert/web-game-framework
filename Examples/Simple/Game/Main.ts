@@ -25,6 +25,8 @@
 namespace Game {
     import Color = Framework.Graphics.Color;
     import Component = Framework.Graphics.Component;
+    import ConstrainedProperty = Framework.Graphics.ConstrainedProperty;
+    import Constraint = Framework.Graphics.Constraint;
     import Dimension = Framework.Graphics.Dimension;
     import DOMEvents = Framework.Graphics.DOMEvents;
     import Frame = Framework.Graphics.Frame;
@@ -43,6 +45,8 @@ namespace Game {
             view.setBackground(new Color(0, 255, 0));
             view.addEventListener("click", () => view.setBackground(new Color(0, 0, 255)));
             view.add(lbl);
+            view.addConstraint(new Constraint(view, ConstrainedProperty.left, lbl, ConstrainedProperty.left, 5));
+            view.addConstraint(new Constraint(view, ConstrainedProperty.top, lbl, ConstrainedProperty.top, 5));
             frame.add(view);
             frame.openView("exampleView");
             let e: DOMEvents = new DOMEvents(frame);

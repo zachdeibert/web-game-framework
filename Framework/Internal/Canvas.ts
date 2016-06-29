@@ -77,7 +77,7 @@ namespace Framework.Internal {
         }
 
         public initEvent(type: string, comparator: LocationComparator, collector: EventCollector, exclude?: Container) {
-            super.initEvent(type, comparator, exclude);
+            super.initEvent(type, comparator, collector, exclude);
             collector(type, (e: Event) => this.dispatchEvent(e), this.canvas);
         }
 
