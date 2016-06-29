@@ -7,3 +7,4 @@ bower_components/
 jspm_packages/
 
 !electron.js
+!server.js

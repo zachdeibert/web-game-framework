@@ -18,5 +18,8 @@
     "homepage": "https://github.com/zachdeibert/web-game-framework#readme",
     "devDependencies": {
         "electron-prebuilt": "^1.2.5"
+    },
+    "dependencies": {
+        "command-line-args": "^3.0.0"
     }
 }
