@@ -84,6 +84,14 @@ namespace Framework.Graphics {
             return p.x >= this.minX() && p.x <= this.maxX() && p.y >= this.minY() && p.y <= this.maxY();
         }
 
+        public clone(): Rectangle {
+            return new Rectangle(this.location.clone(), this.size.clone());
+        }
+
+        public equals(that: Rectangle): boolean {
+            return this.location.equals(that.location) && this.size.equals(that.size);
+        }
+
         public constructor(location?: Point, size?: Dimension | Point) {
             this.location = location || new Point();
             if ( size instanceof Dimension ) {

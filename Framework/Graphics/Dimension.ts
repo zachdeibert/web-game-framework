@@ -25,6 +25,14 @@ namespace Framework.Graphics {
         public width: number;
         public height: number;
 
+        public clone(): Dimension {
+            return new Dimension(this.width, this.height);
+        }
+
+        public equals(that: Dimension): boolean {
+            return this.width == that.width && this.height == that.height;
+        }
+
         public constructor(width?: number, height?: number) {
             this.width = width || 0;
             this.height = height || 0;

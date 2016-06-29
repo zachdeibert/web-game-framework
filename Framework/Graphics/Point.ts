@@ -25,6 +25,14 @@ namespace Framework.Graphics {
         public x: number;
         public y: number;
 
+        public clone(): Point {
+            return new Point(this.x, this.y);
+        }
+
+        public equals(that: Point): boolean {
+            return this.x == that.x && this.y == that.y;
+        }
+
         public constructor(x?: number, y?: number) {
             this.x = x || 0;
             this.y = y || 0;
