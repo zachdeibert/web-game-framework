@@ -30,6 +30,7 @@ namespace Framework.Graphics {
         private repaintingChildren: Component[];
         private needsFullRepaint: boolean;
         private focusedChild: Component;
+        private registeredEvents: string[];
 
         public getFocusedChild(): Component {
             return this.isFocused() ? this.focusedChild : null;
@@ -37,14 +38,16 @@ namespace Framework.Graphics {
 
         public setFocusedChild(child: Component) {
             let old: Component = this.getFocusedChild();
-            if ( old != null ) {
-                old.setFocused(false);
+            if ( old != child ) {
+                if ( old != null ) {
+                    old.setFocused(false);
+                }
+                this.focusedChild = child;
+                if ( child != null ) {
+                    this.setFocused();
+                }
+                this.repaint();
             }
-            this.focusedChild = child;
-            if ( child != null ) {
-                this.setFocused();
-            }
-            this.repaint();
         }
 
         public paint(g: RenderContext) {
@@ -107,14 +110,16 @@ namespace Framework.Graphics {
                     (children[i] as Container).initEvent(type, comparator, this);
                 }
             }
-            this.addEventListener(type, (e: Event) => {
-                let children: Component[] = this.getChildren();
-                for ( var i = 0; i < children.length; ++i ) {
-                    if ( comparator(e, children[i]) ) {
-                        children[i].dispatchEvent(e);
+            if ( this.registeredEvents.indexOf(type) < 0 ) {
+                this.addEventListener(type, (e: Event) => {
+                    let children: Component[] = this.getChildren();
+                    for ( var i = 0; i < children.length; ++i ) {
+                        if ( comparator(e, children[i]) ) {
+                            children[i].dispatchEvent(e);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         public constructor() {
@@ -122,6 +127,7 @@ namespace Framework.Graphics {
             this.children = [];
             this.repaintingChildren = [];
             this.needsFullRepaint = true;
+            this.registeredEvents = [];
         }
     }
 }

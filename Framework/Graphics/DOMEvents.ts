@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 /// <reference path="Component.ts" />
+/// <reference path="Point.ts" />
 /// <reference path="Rectangle.ts" />
 
 namespace Framework.Graphics {
@@ -31,14 +32,171 @@ namespace Framework.Graphics {
             element.addEventListener(type, l);
         }
 
-        public static mouseComparator(e: Event, c: Component) {
+        public static mouseComparator(e: Event, c: Component): boolean {
             let m: MouseEvent = e as MouseEvent;
             let b: Rectangle = c.getBounds();
-            return m.clientX >= b.minX() && m.clientX <= b.maxX() && m.clientY >= b.minY() && m.clientY <= b.maxY();
+            return b.contains(new Point(m.clientX, m.clientY));
+        }
+
+        public static mouseOverComparator(e: Event, c: Component): boolean {
+            let m: MouseEvent = e as MouseEvent;
+            let b: Rectangle = c.getBounds();
+            return b.contains(new Point(m.clientX, m.clientY)) && !b.contains(new Point(m.clientX - m.movementX, m.clientY - m.movementY));
+        }
+
+        public static mouseOutComparator(e: Event, c: Component): boolean {
+            let m: MouseEvent = e as MouseEvent;
+            let b: Rectangle = c.getBounds();
+            return !b.contains(new Point(m.clientX, m.clientY)) && b.contains(new Point(m.clientX - m.movementX, m.clientY - m.movementY));
+        }
+
+        public static focusComparator(e: Event, c: Component): boolean {
+            return c.isFocused();
+        }
+
+        public static trueComparator(e: Event, c: Component): boolean {
+            return true;
+        }
+
+        private _(type: string, comparator: string, name: string = type) {
+            let cls: any = DOMEvents;
+            this.c.initEvent(name, cls[comparator + "Comparator"], (_: string, l: EventListener | EventListenerObject, element?: HTMLElement) => element.addEventListener(type, l));
+        }
+
+        public afterPrint() {
+            this._("afterprint", "true");
+        }
+
+        public beforePrint() {
+            this._("beforeprint", "true");
+        }
+
+        public beforeUnload() {
+            this._("beforeunload", "true");
+        }
+
+        public error() {
+            this._("error", "true");
+        }
+
+        public hashChange() {
+            this._("hashchange", "true");
+        }
+
+        public load() {
+            this._("load", "true");
+        }
+
+        public message() {
+            this._("message", "true");
+        }
+
+        public offline() {
+            this._("offline", "true");
+        }
+
+        public online() {
+            this._("online", "true");
+        }
+
+        public pageHide() {
+            this._("pagehide", "true");
+        }
+
+        public pageShow() {
+            this._("pageshow", "true");
+        }
+
+        public popState() {
+            this._("popstate", "true");
+        }
+
+        public resize() {
+            this._("resize", "true");
+        }
+
+        public storage() {
+            this._("storage", "true");
+        }
+
+        public unload() {
+            this._("unload", "true");
+        }
+
+        public keyDown() {
+            this._("keydown", "focus");
+        }
+
+        public keyPress() {
+            this._("keypress", "focus");
+        }
+
+        public keyUp() {
+            this._("keyup", "focus");
         }
 
         public click() {
-            this.c.initEvent("click", DOMEvents.mouseComparator, DOMEvents.DOMCollector);
+            this._("click", "mouse");
+        }
+
+        public dblClick() {
+            this._("dblclick", "mouse");
+        }
+
+        public drag() {
+            this._("drag", "mouse");
+        }
+
+        public dragEnd() {
+            this._("dragend", "mouse");
+        }
+
+        public dragEnter() {
+            this._("drag", "mouseOver", "dragenter");
+        }
+
+        public dragLeave() {
+            this._("drag", "mouseOut", "dragleave");
+        }
+
+        public dragOver() {
+            this._("drag", "mouseOver", "dragover");
+        }
+
+        public dragStart() {
+            this._("dragstart", "mouse");
+        }
+
+        public drop() {
+            this._("drop", "mouse");
+        }
+
+        public mouseDown() {
+            this._("mousedown", "mouse");
+        }
+
+        public mouseMove() {
+            this._("mousemove", "mouse");
+        }
+
+        public mouseOut() {
+            this._("mousemove", "mouseOut", "mouseout");
+        }
+
+        public mouseOver() {
+            this._("mousemove", "mouseOver", "mouseover");
+        }
+
+        public mouseUp() {
+            this._("mouseup", "mouse");
+        }
+
+        public scroll() {
+            this._("scroll", "mouse");
+        }
+
+        public wheel() {
+            this._("wheel", "mouse");
         }
 
         public constructor(c: Component) {

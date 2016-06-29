@@ -41,7 +41,7 @@ namespace Framework.Graphics {
 
         protected getRealPoint(p: Point): Point {
             let t = new Point(p.x + this.clip.location.x, p.y + this.clip.location.y);
-            if ( t.x <= this.clip.maxX() && t.x >= this.clip.minX() && t.y <= this.clip.maxY() && t.y >= this.clip.minY() ) {
+            if ( this.clip.contains(t) ) {
                 return t;
             } else {
                 return null;

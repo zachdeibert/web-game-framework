@@ -80,6 +80,10 @@ namespace Framework.Graphics {
             }
         }
 
+        public contains(p: Point): boolean {
+            return p.x >= this.minX() && p.x <= this.maxX() && p.y >= this.minY() && p.y <= this.maxY();
+        }
+
         public constructor(location?: Point, size?: Dimension | Point) {
             this.location = location || new Point();
             if ( size instanceof Dimension ) {
