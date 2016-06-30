@@ -20,12 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/// <reference path="FrameworkEvent.ts" />
+/// <reference path="FrameworkEventListener.ts" />
+/// <reference path="FrameworkEventListenerObject.ts" />
+
 namespace Framework {
     export class EventDispatcher extends Object implements EventTarget {
-        private listeners: { [type: string]: Array<EventListener> };
-        private listenerObjects: { [type: string]: Array<EventListenerObject> };
+        private listeners: { [type: string]: Array<FrameworkEventListener> };
+        private listenerObjects: { [type: string]: Array<FrameworkEventListenerObject> };
 
-        public addEventListener(type: string, listener: EventListener | EventListenerObject, useCapture?: boolean) {
+        public addEventListener(type: string, listener: EventListener | EventListenerObject | FrameworkEventListener | FrameworkEventListenerObject, useCapture?: boolean) {
             let obj: any = listener;
             if ( typeof(listener) == "function" ) {
                 let func: EventListener = obj;
@@ -48,7 +52,7 @@ namespace Framework {
             }
         }
 
-        public dispatchEvent(evt: Event): boolean {
+        public dispatchEvent(evt: Event | FrameworkEvent): boolean {
             let oldname = "on" + evt.type;
             if ( this.hasOwnProperty(oldname) ) {
                 let obj: any = this;
@@ -58,15 +62,15 @@ namespace Framework {
                 }
             }
             if ( this.listeners.hasOwnProperty(evt.type) ) {
-                this.listeners[evt.type].forEach((v: EventListener) => v(evt));
+                this.listeners[evt.type].forEach((v: FrameworkEventListener) => v(evt));
             }
             if ( this.listenerObjects.hasOwnProperty(evt.type) ) {
-                this.listenerObjects[evt.type].forEach((v: EventListenerObject) => v.handleEvent(evt));
+                this.listenerObjects[evt.type].forEach((v: FrameworkEventListenerObject) => v.handleEvent(evt));
             }
             return evt.defaultPrevented;
         }
 
-        public removeEventListener(type: string, listener: EventListener | EventListenerObject, useCapture?: boolean) {
+        public removeEventListener(type: string, listener: EventListener | EventListenerObject | FrameworkEventListener | FrameworkEventListenerObject, useCapture?: boolean) {
             let list: { [type: string]: Array<EventListener | EventListenerObject> } = typeof(listener) == "function" ? this.listeners : this.listenerObjects;
             if ( list.hasOwnProperty(type) ) {
                 list[type] = list[type].filter((v: EventListener | EventListenerObject) => v == listener);
