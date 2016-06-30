@@ -13,6 +13,7 @@
         "jspm_packages",
         "Examples",
         "electron.js",
+        "server.js",
         "out.js",
         "out.d.ts"
     ]

@@ -22,7 +22,24 @@
 
 var fs = require("fs");
 var http = require("http");
+var https = require("https");
 var commandLineArgs = require("command-line-args");
+var querystring = require("querystring");
+var websocket = require("websocket");
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+global.Event = (function (_super) {
+    __extends(Event, _super);
+    function Event(type) {
+        _super.call(this);
+        this.type = type;
+    }
+    return Event;
+}(Object));
 
 var argDef = [
     {
@@ -51,6 +68,9 @@ var mimes = {
     "map": "text/plain",
     "json": "text/json"
 };
+var secureProperties = [
+    "auth.secret"
+];
 
 var args = commandLineArgs(argDef);
 
@@ -86,7 +106,7 @@ function handleReq(req, res, url, match) {
 }
 
 function request(req) {
-    if ( req.url == "/" ) {
+    if ( req.url == "/" || req.url.startsWith("/index.html?") || req.url.startsWith("/?") ) {
         req.url = "/index.html";
     }
     return false;
@@ -94,6 +114,51 @@ function request(req) {
 
 include("out.js");
 include("game.js");
+
+global.window = {
+    serverInfo: new Framework.Internal.SiteInfo(true),
+    request: function(options, body, callback) {
+        var req = https.request(options, res => {
+            res.setEncoding("utf8");
+            var data = "";
+            res.on("data", chunk => data += chunk.toString());
+            res.on("end", () => {
+                try {
+                    data = JSON.parse(data);
+                } catch ( SyntaxError ) {
+                }
+                callback(data);
+            });
+        });
+        req.on("error", e => {
+            console.log(e.message);
+            callback(null);
+        });
+        if ( body != null ) {
+            req.write(querystring.stringify(body));
+        }
+        req.end();
+    },
+    Framework: global.Framework
+};
+global.window.serverInfo.addEventListener("load", () => {
+    for ( var i = 0; i < secureProperties.length; ++i ) {
+        var namespaces = secureProperties[i].split('.');
+        var scope = global.window.serverInfo;
+        for ( var i = 0; i < namespaces.length - 1; ++i ) {
+            if ( scope.hasOwnProperty(namespaces[i]) ) {
+                scope = scope[namespaces[i]];
+            } else {
+                scope = null;
+                break;
+            }
+        }
+        if ( scope != null && scope.hasOwnProperty(namespaces[namespaces.length - 1]) ) {
+            scope[namespaces[namespaces.length - 1]] = readFile(scope[namespaces[namespaces.length - 1]]);
+        }
+    }
+});
+global.window.serverInfo.load(readFile("site.json"));
 
 var server = http.createServer(args.debug ?
     (req, res) => request(req) ||
@@ -115,7 +180,27 @@ var server = http.createServer(args.debug ?
                   fail(res)
 );
 
+var srv = new Framework.Network.Server();
+
 server.listen(args.port, args.bind, () => {
     console.log(`Server running at http://localhost:${args.port}/`);
-    new Framework.Internal.Server();
+});
+
+var wsserver = new websocket.server({
+    httpServer: server,
+    autoAcceptConnections: false
+});
+
+wsserver.on("request", req => {
+    var conn = req.accept("web-game-framework", req.origin);
+    var callback = data => conn.sendUTF(JSON.stringify(data));
+    srv.dispatchEvent(new Framework.Network.SocketEvent("connect", callback, conn.remoteAddress));
+    conn.on("message", message => {
+        if ( message.type == "utf8" ) {
+            srv.dispatchEvent(new Framework.Network.SocketEvent("data", callback, conn.remoteAddress, JSON.parse(message.utf8Data)));
+        }
+    });
+    conn.on("close", (reason, desc) => {
+        srv.dispatchEvent(new Framework.Network.SocketEvent("close", callback, conn.remoteAddress, null, desc));
+    });
 });

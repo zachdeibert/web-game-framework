@@ -30,33 +30,41 @@ namespace Framework.Internal {
         private xmlhttp: XMLHttpRequest;
         public title: string;
         public main: string;
+        public auth: any;
+
+        public load(data: string) {
+            let json = JSON.parse(data);
+            this.title = json.title;
+            this.main = json.main;
+            this.auth = json.auth;
+            this.dispatchEvent(new Event("load"));
+        }
 
         public pull(): void {
             this.xmlhttp.send();
         }
 
-        public constructor() {
+        public constructor(skipInit?: boolean) {
             super();
-            if ( window.hasOwnProperty("XMLHttpRequest") ) {
-                this.xmlhttp = new XMLHttpRequest();
-            } else if ( window.hasOwnProperty("ActiveXObject") ) {
-                this.xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-            } else {
-                throw new LoadError("Unable to find XMLHttpRequest class");
-            }
-            this.xmlhttp.open("GET", "site.json", true);
-            this.xmlhttp.addEventListener("readystatechange", () => {
-                if ( this.xmlhttp.readyState == 4 ) {
-                    if ( this.xmlhttp.status == 200 ) {
-                        let json = JSON.parse(this.xmlhttp.responseText);
-                        this.title = json.title;
-                        this.main = json.main;
-                        this.dispatchEvent(new Event("load"));
-                    } else {
-                        throw new LoadError("Unable to get site information");
-                    }
+            if ( !skipInit ) {
+                if ( window.hasOwnProperty("XMLHttpRequest") ) {
+                    this.xmlhttp = new XMLHttpRequest();
+                } else if ( window.hasOwnProperty("ActiveXObject") ) {
+                    this.xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                } else {
+                    throw new LoadError("Unable to find XMLHttpRequest class");
                 }
-            });
+                this.xmlhttp.open("GET", "site.json", true);
+                this.xmlhttp.addEventListener("readystatechange", () => {
+                    if ( this.xmlhttp.readyState == 4 ) {
+                        if ( this.xmlhttp.status == 200 ) {
+                            this.load(this.xmlhttp.responseText);
+                        } else {
+                            throw new LoadError("Unable to get site information");
+                        }
+                    }
+                });
+            }
         }
     }
 }

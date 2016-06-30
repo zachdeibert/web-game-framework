@@ -1,4 +1,4 @@
-// Server.ts
+// AuthFactory.ts
 //
 // Copyright (c) 2016 Zach Deibert
 //
@@ -20,9 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace Framework.Internal {
-    export class Server {
-        public constructor() {
+/// <reference path="IAuth.ts" />
+
+namespace Framework.Auth {
+    export class AuthFactory {
+        public static create(config: any): IAuth {
+            if ( config.type ) {
+                return new (eval("window." + config.type))();
+            } else {
+                return null;
+            }
         }
     }
 }

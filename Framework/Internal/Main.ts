@@ -20,16 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/// <reference path="../Auth/AuthFactory.ts" />
+/// <reference path="../Auth/IAuth.ts" />
 /// <reference path="../Graphics/Dimension.ts" />
 /// <reference path="../Graphics/Label.ts" />
 /// <reference path="../Graphics/Point.ts" />
 /// <reference path="../Graphics/Rectangle.ts" />
 /// <reference path="../Graphics/Screen.ts" />
+/// <reference path="../Network/Client.ts" />
 /// <reference path="Canvas.ts" />
 /// <reference path="SiteInfo.ts" />
 
 namespace Framework.Internal {
+    import AuthFactory = Framework.Auth.AuthFactory;
+    import Client = Framework.Network.Client;
     import Dimension = Framework.Graphics.Dimension;
+    import IAuth = Framework.Auth.IAuth;
     import Label = Framework.Graphics.Label;
     import Point = Framework.Graphics.Point;
     import Rectangle = Framework.Graphics.Rectangle;
@@ -43,6 +49,7 @@ namespace Framework.Internal {
         private canvasPanel: HTMLElement;
         private isFullscreen: boolean;
         private canvas: Canvas;
+        private auth: IAuth;
 
         public screenResized() {
             this.canvas.resetBounds();
@@ -77,7 +84,19 @@ namespace Framework.Internal {
             this.info = new SiteInfo();
             this.info.addEventListener("load", () => {
                 document.title = this.info.title;
-                eval("window." + this.info.main).main(this.canvas);
+                let sock: Client = new Client();
+                if ( this.info.auth ) {
+                    this.auth = AuthFactory.create(this.info.auth);
+                } else {
+                    this.auth = null;
+                }
+                if ( this.auth != null ) {
+                    this.auth.clientAuth(this.info.auth, sock, user => {
+                        console.log("Authenticated " + user.name);
+                        eval("window." + this.info.main).main(this.canvas, sock, user);
+                    });
+                }
+                eval("window." + this.info.main).main(this.canvas, sock);
             });
             this.info.pull();
             this.screen = new Screen();

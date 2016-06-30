@@ -1,6 +1,7 @@
 *.js
 *.js.map
 *.d.ts
+*.secret
 tmp/
 node_modules/
 bower_components/
