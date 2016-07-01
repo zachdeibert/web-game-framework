@@ -40,32 +40,51 @@ namespace Framework.Auth {
         }
 
         public clientAuth(config: any, sock: Client, callback: IAuthenticationCallback): void {
-            if ( location.search == "" ) {
-                this.startOAuth(config);
-            }
-            let vars: string[] = location.search.substr(1).split('&');
-            let code: string;
-            for ( var i: number = 0; i < vars.length; ++i ) {
-                var fields: string[] = vars[i].split('=');
-                if ( fields[0] == "code" ) {
-                    code = fields[1];
-                    break;
-                }
-            }
-            if ( code ) {
-                let listener: EventListener = (ev: FrameworkEvent) => {
-                    let e: SocketEvent = ev as SocketEvent;
-                    if ( e.data.type && e.data.type == "authentication_success" ) {
+            let storage: any = localStorage;
+            let listener: EventListener = (ev: FrameworkEvent) => {
+                let e: SocketEvent = ev as SocketEvent;
+                if ( e.data.type ) {
+                    if ( e.data.type == "authentication_success" ) {
                         sock.removeEventListener("message", listener);
-                        callback(e.data.user);
+                        storage.auth_google_token = e.data.user.token;
+                        callback(new User(e.data.user.name, e.data.user.id, e.data.user.token));
+                    } else if ( e.data.type == "authentication_failure" ) {
+                        sock.removeEventListener("message", listener);
+                        storage.removeItem("auth_google_token");
+                        this.clientAuth(config, sock, callback);
                     }
-                };
-                sock.addEventListener("message", listener);
+                }
+            };
+            sock.addEventListener("message", listener);
+            if ( storage.auth_google_token ) {
                 sock.send({
-                    "authToken": code
+                    "type": "get_user",
+                    "token": storage.auth_google_token
                 });
+            } else if ( storage.auth_google_tmpCode ) {
+                sock.send({
+                    "authToken": storage.auth_google_tmpCode
+                });
+                storage.removeItem("auth_google_tmpCode");
             } else {
-                this.startOAuth(config);
+                if ( location.search == "" ) {
+                    this.startOAuth(config);
+                }
+                let vars: string[] = location.search.substr(1).split('&');
+                let code: string;
+                for ( var i: number = 0; i < vars.length; ++i ) {
+                    var fields: string[] = vars[i].split('=');
+                    if ( fields[0] == "code" ) {
+                        code = fields[1];
+                        break;
+                    }
+                }
+                if ( code ) {
+                    storage.auth_google_tmpCode = code;
+                    history.back();
+                } else {
+                    this.startOAuth(config);
+                }
             }
         }
 

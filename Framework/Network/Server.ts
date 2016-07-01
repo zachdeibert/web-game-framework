@@ -22,6 +22,7 @@
 
 /// <reference path="../Auth/AuthFactory.ts" />
 /// <reference path="../Auth/IAuth.ts" />
+/// <reference path="../Auth/User.ts" />
 /// <reference path="../EventDispatcher.ts" />
 /// <reference path="../FrameworkEvent.ts" />
 /// <reference path="SocketEvent.ts" />
@@ -32,15 +33,31 @@ namespace Framework.Network {
     import EventDispatcher = Framework.EventDispatcher;
     import FrameworkEvent = Framework.FrameworkEvent;
     import IAuth = Framework.Auth.IAuth;
+    import User = Framework.Auth.User;
 
     export class Server extends EventDispatcher {
         private auth: IAuth;
+        private users: User[];
 
         public clientMessage(e: SocketEvent) {
             let w: any = window;
             if ( e.data.authToken ) {
                 this.auth.serverAuth(w.serverInfo.auth, e.data.authToken, e.send, user => {
+                    this.users.push(user);
                     console.log("Authenticated " + user.name);
+                });
+            } else if ( e.data.type == "get_user" && e.data.token ) {
+                for ( var i: number = 0; i < this.users.length; ++i ) {
+                    if ( this.users[i].token == e.data.token ) {
+                        e.send({
+                            "type": "authentication_success",
+                            "user": this.users[i]
+                        });
+                        return;
+                    }
+                }
+                e.send({
+                    "type": "authentication_failure"
                 });
             }
         }
@@ -49,6 +66,7 @@ namespace Framework.Network {
             super();
             let w: any = window;
             this.auth = AuthFactory.create(w.serverInfo.auth);
+            this.users = [];
             this.addEventListener("data", (e: FrameworkEvent) => this.clientMessage(e as SocketEvent));
         }
     }
