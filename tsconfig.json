@@ -3,7 +3,7 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outFile": "out.js",
+        "outFile": "framework.js",
         "sourceMap": true,
         "declaration": true
     },
@@ -14,7 +14,7 @@
         "Examples",
         "electron.js",
         "server.js",
-        "out.js",
-        "out.d.ts"
+        "framework.js",
+        "framework.d.ts"
     ]
 }

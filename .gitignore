@@ -10,3 +10,4 @@ save.json
 
 !electron.js
 !server.js
+!Examples/*/framework.*

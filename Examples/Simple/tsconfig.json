@@ -10,12 +10,12 @@
         "node_modules",
         "bower_components",
         "jspm_packages",
-        "out.js",
+        "framework.js",
         "server.js",
         "game.js"
     ],
     "files": [
-        "out.d.ts",
+        "framework.d.ts",
         "Game/Main.ts",
         "Game/Server.ts"
     ]

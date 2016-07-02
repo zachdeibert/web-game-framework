@@ -112,7 +112,7 @@ function request(req) {
     return false;
 }
 
-include("out.js");
+include("framework.js");
 include("game.js");
 
 global.window = {
@@ -184,8 +184,8 @@ var server = http.createServer(args.debug ?
                   handleReq(req, res, "/game.js.map", false) ||
                   handleReq(req, res, "/index.css", false) ||
                   handleReq(req, res, "/index.html", false) ||
-                  handleReq(req, res, "/out.js", false) ||
-                  handleReq(req, res, "/out.js.map", false) ||
+                  handleReq(req, res, "/framework.js", false) ||
+                  handleReq(req, res, "/framework.js.map", false) ||
                   handleReq(req, res, "/site.json", false) ||
                   handleReq(req, res, /^\/([a-zA-Z]+\/)+[A-Za-z0-9]+\.ts$/, true) ||
                   fail(res) :
@@ -193,7 +193,7 @@ var server = http.createServer(args.debug ?
                   handleReq(req, res, "/game.js", false) ||
                   handleReq(req, res, "/index.css", false) ||
                   handleReq(req, res, "/index.html", false) ||
-                  handleReq(req, res, "/out.js", false) ||
+                  handleReq(req, res, "/framework.js", false) ||
                   handleReq(req, res, "/site.json", false) ||
                   fail(res)
 );
