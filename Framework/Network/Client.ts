@@ -25,6 +25,7 @@
 /// <reference path="../Model/ClientModel.ts" />
 /// <reference path="../Model/GlobalModel.ts" />
 /// <reference path="../Model/UserModel.ts" />
+/// <reference path="ICommand.ts" />
 /// <reference path="INetworkSide.ts" />
 /// <reference path="SocketEvent.ts" />
 
@@ -62,6 +63,13 @@ namespace Framework.Network {
 
         public send(data: any): void {
             this.ensureOpen(() => this.sock.send(JSON.stringify(data)));
+        }
+
+        public sendCommand(cmd: ICommand) {
+            this.send({
+                "type": "command",
+                "command": cmd.save()
+            });
         }
 
         public setModel(model: ClientModel<GlobalModel, UserModel>): void {

@@ -156,7 +156,8 @@ global.window = {
             "mode": 0o644
         });
     },
-    Framework: global.Framework
+    Framework: global.Framework,
+    window: global
 };
 global.window.serverInfo.addEventListener("load", () => {
     for ( var i = 0; i < secureProperties.length; ++i ) {

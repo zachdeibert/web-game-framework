@@ -29,6 +29,7 @@
 /// <reference path="../Model/ModelChangeEvent.ts" />
 /// <reference path="../Model/ServerModel.ts" />
 /// <reference path="../Model/UserModel.ts" />
+/// <reference path="CommandEvent.ts" />
 /// <reference path="SocketEvent.ts" />
 /// <reference path="INetworkSide.ts" />
 /// <reference path="ISocketSendCallback.ts" />
@@ -159,6 +160,8 @@ namespace Framework.Network {
                 e.send({
                     "type": "authentication_failure"
                 });
+            } else if ( e.data.type == "command" && e.data.command ) {
+                this.dispatchEvent(new CommandEvent(Command.create(e.data.command)));
             }
         }
 
