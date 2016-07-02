@@ -34,25 +34,25 @@ namespace Framework.Graphics {
 
         public static mouseComparator(e: Event, c: Component): boolean {
             let m: MouseEvent = e as MouseEvent;
-            let b: Rectangle = c.getBounds();
+            let b: Rectangle = c.getGlobalBounds();
             return b.contains(new Point(m.clientX, m.clientY));
         }
 
         public static mouseOverComparator(e: Event, c: Component): boolean {
             let m: MouseEvent = e as MouseEvent;
-            let b: Rectangle = c.getBounds();
+            let b: Rectangle = c.getGlobalBounds();
             return b.contains(new Point(m.clientX, m.clientY)) && !b.contains(new Point(m.clientX - m.movementX, m.clientY - m.movementY));
         }
 
         public static mouseOutComparator(e: Event, c: Component): boolean {
             let m: MouseEvent = e as MouseEvent;
-            let b: Rectangle = c.getBounds();
+            let b: Rectangle = c.getGlobalBounds();
             return !b.contains(new Point(m.clientX, m.clientY)) && b.contains(new Point(m.clientX - m.movementX, m.clientY - m.movementY));
         }
 
         public static touchComparator(e: Event, c: Component): boolean {
             let t: TouchEvent = e as TouchEvent;
-            let b: Rectangle = c.getBounds();
+            let b: Rectangle = c.getGlobalBounds();
             for ( var i: number = 0; i < t.touches.length; ++i ) {
                 let touch: Touch = t.touches.item(i);
                 if ( b.contains(new Point(touch.clientX, touch.clientY)) ) {

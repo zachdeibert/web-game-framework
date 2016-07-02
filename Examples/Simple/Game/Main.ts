@@ -25,6 +25,7 @@
 /// <reference path="UserModel.ts" />
 
 namespace Game {
+    import Button = Framework.Graphics.Button;
     import Client = Framework.Network.Client;
     import ClientModel = Framework.Model.ClientModel;
     import Color = Framework.Graphics.Color;
@@ -61,6 +62,11 @@ namespace Game {
             view.add(lbl2);
             view.addConstraint(new Constraint(lbl, ConstrainedProperty.left, lbl2, ConstrainedProperty.left, 0));
             view.addConstraint(new Constraint(lbl, ConstrainedProperty.bottom, lbl2, ConstrainedProperty.top, 5));
+            let btn: Button = new Button("Click me!");
+            btn.setBounds(new Rectangle(new Point(0, 0), new Dimension(100, 20)));
+            view.add(btn);
+            view.addConstraint(new Constraint(lbl2, ConstrainedProperty.left, btn, ConstrainedProperty.left, 0));
+            view.addConstraint(new Constraint(lbl2, ConstrainedProperty.bottom, btn, ConstrainedProperty.top, 5));
             frame.add(view);
             frame.openView("exampleView");
             let e: DOMEvents = new DOMEvents(frame);

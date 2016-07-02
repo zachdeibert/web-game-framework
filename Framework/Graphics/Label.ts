@@ -23,10 +23,12 @@
 /// <reference path="Component.ts" />
 /// <reference path="Point.ts" />
 /// <reference path="RenderContext.ts" />
+/// <reference path="TextAlign.ts" />
 
 namespace Framework.Graphics {
     export class Label extends Component {
         private text: string;
+        private align: TextAlign;
 
         public getText(): string {
             return this.text;
@@ -37,13 +39,36 @@ namespace Framework.Graphics {
             this.repaint();
         }
 
+        public getTextAlign(): TextAlign {
+            return this.align;
+        }
+
+        public setTextAlign(align: TextAlign) {
+            this.align = align;
+            this.repaint();
+        }
+
         public paint(g: RenderContext) {
-            g.fillText(this.getText(), new Point(0, this.getFont().lineHeight));
+            let text: string = this.getText();
+            switch ( this.getTextAlign() ) {
+                case TextAlign.start:
+                case TextAlign.left:
+                    g.fillText(text, new Point(0, this.getFont().lineHeight));
+                    break;
+                case TextAlign.center:
+                    g.fillText(text, new Point((this.getBounds().size.width - g.measure(text).width) / 2, this.getFont().lineHeight));
+                    break;
+                case TextAlign.end:
+                case TextAlign.right:
+                    g.fillText(text, new Point(this.getBounds().size.width - g.measure(text).width, this.getFont().lineHeight));
+                    break;
+            }
         }
 
         public constructor(text?: string) {
             super();
             this.text = text;
+            this.align = TextAlign.left;
         }
     }
 }

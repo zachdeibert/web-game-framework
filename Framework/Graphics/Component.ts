@@ -131,6 +131,17 @@ namespace Framework.Graphics {
             this.repaint();
         }
 
+        public getGlobalBounds(): Rectangle {
+            let parent: Container = this.getParent();
+            let b: Rectangle = this.getBounds();
+            if ( parent ) {
+                let pb: Rectangle = parent.getBounds();
+                return new Rectangle(new Point(pb.location.x + b.location.x, pb.location.y + b.location.y), b.size);
+            } else {
+                return b;
+            }
+        }
+
         public getRepaintPeriod(): number {
             return this.repaintPeriod;
         }
