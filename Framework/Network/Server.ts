@@ -47,14 +47,40 @@ namespace Framework.Network {
     export class Server extends EventDispatcher implements INetworkSide<ServerModel<GlobalModel, UserModel>> {
         private auth: IAuth;
         private users: User[];
+        private userSocks: ISocketSendCallback[];
         private socks: ISocketSendCallback[];
         private model: ServerModel<GlobalModel, UserModel>;
         private unregisterModel: () => void;
 
-        public send(data: any) {
-            for ( var i: number = 0; i < this.socks.length; ++i ) {
-                this.socks[i](data);
+        public send(data: any, user?: User) {
+            if ( user ) {
+                this.getSock(user)(data);
+            } else {
+                for ( var i: number = 0; i < this.socks.length; ++i ) {
+                    this.socks[i](data);
+                }
             }
+        }
+
+        public sendEntireModel(sock: ISocketSendCallback, model: UserModel | GlobalModel, path: string) {
+            let m: any = model;
+            for ( var key in model ) {
+                if ( typeof(m[key]) != "function" && key != "listeners" && key != "listenerObjects" && key != "parent" && key != "parentName" ) {
+                    sock({
+                        "type": "model_update",
+                        "path": path + "." + key,
+                        "value": m[key]
+                    });
+                }
+            }
+        }
+
+        public getSock(user: User): ISocketSendCallback {
+            let i: number = this.users.indexOf(user);
+            if ( i < 0 ) {
+                return null;
+            }
+            return this.userSocks[i];
         }
 
         public setModel(model: ServerModel<GlobalModel, UserModel>) {
@@ -80,7 +106,7 @@ namespace Framework.Network {
                             "type": "model_update",
                             "path": "user." + e.path,
                             "value": e.value
-                        });
+                        }, user.user);
                     };
                     user.addEventListener("change", listener);
                     users.push(user);
@@ -104,19 +130,6 @@ namespace Framework.Network {
             }
         }
 
-        public sendUser(sock: ISocketSendCallback, model: UserModel | GlobalModel, path: string) {
-            let m: any = model;
-            for ( var key in model ) {
-                if ( typeof(m[key]) != "function" && key != "listeners" && key != "listenerObjects" && key != "parent" && key != "parentName" ) {
-                    sock({
-                        "type": "model_update",
-                        "path": path + "." + key,
-                        "value": m[key]
-                    });
-                }
-            }
-        }
-
         public clientMessage(e: SocketEvent) {
             let w: any = window;
             if ( e.data.authToken ) {
@@ -125,12 +138,13 @@ namespace Framework.Network {
                         if ( this.users[i].id == user.id ) {
                             this.users[i].name = user.name;
                             this.users[i].token = user.token;
+                            this.userSocks[i] = e.send;
                             if ( this.model != null ) {
                                 for ( var j: number = 0; j < this.model.users.length; ++j ) {
                                     let model: UserModel = this.model.users.get(j);
                                     if ( model.user == this.users[j] ) {
-                                        this.sendUser(e.send, model, "user");
-                                        this.sendUser(e.send, this.model.global, "global");
+                                        this.sendEntireModel(e.send, model, "user");
+                                        this.sendEntireModel(e.send, this.model.global, "global");
                                     }
                                 }
                             }
@@ -138,6 +152,7 @@ namespace Framework.Network {
                         }
                     }
                     this.users.push(user);
+                    this.userSocks[this.users.length - 1] = e.send;
                     if ( this.model != null ) {
                         this.model.addUser(user);
                     }
@@ -169,6 +184,7 @@ namespace Framework.Network {
             this.auth = AuthFactory.create(w.serverInfo.auth);
             this.socks = [];
             this.users = [];
+            this.userSocks = [];
             this.addEventListener("connect", (e: FrameworkEvent) => this.socks.push((e as SocketEvent).send));
             this.addEventListener("data", (e: FrameworkEvent) => this.clientMessage(e as SocketEvent));
             this.addEventListener("close", (e: FrameworkEvent) => this.socks.splice(this.socks.indexOf((e as SocketEvent).send), 1));
