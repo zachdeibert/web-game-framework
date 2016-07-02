@@ -69,8 +69,23 @@ namespace Framework.Model {
             }
         }
 
+        public savableObject(): any {
+            let o: any = {};
+            let me: any = this;
+            for ( var key in this ) {
+                if ( typeof(me[key]) != "function" && key != "listeners" && key != "listenerObjects" && key != "parent" && key != "parentName" ) {
+                    if ( me[key] instanceof ModelBase ) {
+                        o[key] = me[key].savableObject();
+                    } else {
+                        o[key] = me[key];
+                    }
+                }
+            }
+            return o;
+        }
+
         public save(): string {
-            return JSON.stringify(this);
+            return JSON.stringify(this.savableObject());
         }
 
         protected fieldChanged(path: string, val: any = (this as any)[path]) {

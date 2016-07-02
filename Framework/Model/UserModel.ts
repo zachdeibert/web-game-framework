@@ -28,5 +28,10 @@ namespace Framework.Model {
 
     export class UserModel extends ModelBase {
         public user: User;
+
+        public constructor() {
+            super();
+            this.user = new User();
+        }
     }
 }

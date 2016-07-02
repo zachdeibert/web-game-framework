@@ -139,6 +139,23 @@ global.window = {
         }
         req.end();
     },
+    readFile: function(path) {
+        try {
+            var stat = fs.statSync(path);
+            if ( stat && stat.isFile() ) {
+                return readFile(path);
+            } else {
+                return null;
+            }
+        } catch ( e ) {
+            return null;
+        }
+    },
+    writeFile: function(path, content) {
+        fs.writeFileSync(path, content, {
+            "mode": 0o644
+        });
+    },
     Framework: global.Framework
 };
 global.window.serverInfo.addEventListener("load", () => {

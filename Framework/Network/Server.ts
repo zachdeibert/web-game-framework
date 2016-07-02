@@ -46,8 +46,7 @@ namespace Framework.Network {
 
     export class Server extends EventDispatcher implements INetworkSide<ServerModel<GlobalModel, UserModel>> {
         private auth: IAuth;
-        private users: User[];
-        private userSocks: ISocketSendCallback[];
+        private userSocks: { [id: string]: ISocketSendCallback };
         private socks: ISocketSendCallback[];
         private model: ServerModel<GlobalModel, UserModel>;
         private unregisterModel: () => void;
@@ -76,11 +75,7 @@ namespace Framework.Network {
         }
 
         public getSock(user: User): ISocketSendCallback {
-            let i: number = this.users.indexOf(user);
-            if ( i < 0 ) {
-                return null;
-            }
-            return this.userSocks[i];
+            return this.userSocks[user.id];
         }
 
         public setModel(model: ServerModel<GlobalModel, UserModel>) {
@@ -134,36 +129,30 @@ namespace Framework.Network {
             let w: any = window;
             if ( e.data.authToken ) {
                 this.auth.serverAuth(w.serverInfo.auth, e.data.authToken, e.send, user => {
-                    for ( var i: number = 0; i < this.users.length; ++i ) {
-                        if ( this.users[i].id == user.id ) {
-                            this.users[i].name = user.name;
-                            this.users[i].token = user.token;
-                            this.userSocks[i] = e.send;
-                            if ( this.model != null ) {
-                                for ( var j: number = 0; j < this.model.users.length; ++j ) {
-                                    let model: UserModel = this.model.users.get(j);
-                                    if ( model.user == this.users[j] ) {
-                                        this.sendEntireModel(e.send, model, "user");
-                                        this.sendEntireModel(e.send, this.model.global, "global");
-                                    }
-                                }
-                            }
+                    this.userSocks[user.id] = e.send;
+                    for ( var i: number = 0; i < this.model.users.length; ++i ) {
+                        let model: UserModel = this.model.users.get(i);
+                        if ( model.user.id == user.id ) {
+                            model.user.name = user.name;
+                            model.user.token = user.token;
+                            this.sendEntireModel(e.send, model, "user");
+                            this.sendEntireModel(e.send, this.model.global, "global");
                             return;
                         }
                     }
-                    this.users.push(user);
-                    this.userSocks[this.users.length - 1] = e.send;
-                    if ( this.model != null ) {
-                        this.model.addUser(user);
-                    }
+                    this.model.addUser(user);
                 });
             } else if ( e.data.type == "get_user" && e.data.token ) {
-                for ( var i: number = 0; i < this.users.length; ++i ) {
-                    if ( this.users[i].token == e.data.token ) {
+                for ( var i: number = 0; i < this.model.users.length; ++i ) {
+                    let model: UserModel = this.model.users.get(i);
+                    if ( model.user.token == e.data.token ) {
+                        this.userSocks[model.user.id] = e.send;
                         e.send({
                             "type": "authentication_success",
-                            "user": this.users[i]
+                            "user": model.user
                         });
+                        this.sendEntireModel(e.send, model, "user");
+                        this.sendEntireModel(e.send, this.model.global, "global");
                         return;
                     }
                 }
@@ -183,8 +172,7 @@ namespace Framework.Network {
             let w: any = window;
             this.auth = AuthFactory.create(w.serverInfo.auth);
             this.socks = [];
-            this.users = [];
-            this.userSocks = [];
+            this.userSocks = {};
             this.addEventListener("connect", (e: FrameworkEvent) => this.socks.push((e as SocketEvent).send));
             this.addEventListener("data", (e: FrameworkEvent) => this.clientMessage(e as SocketEvent));
             this.addEventListener("close", (e: FrameworkEvent) => this.socks.splice(this.socks.indexOf((e as SocketEvent).send), 1));

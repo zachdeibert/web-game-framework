@@ -31,7 +31,8 @@ namespace Game {
 
     export class Server {
         public static main(server: _Server) {
-            let model: ServerModel<GlobalModel, UserModel> = new ServerModel<GlobalModel, UserModel>(GlobalModel, UserModel);
+            let model: ServerModel<GlobalModel, UserModel> = new ServerModel<GlobalModel, UserModel>(GlobalModel, UserModel, "save.json");
+            model.saveModelOnChange();
             model.users.addEventListener("insert", (ev: FrameworkEvent) => {
                 let e: ModelChangeEvent = ev as ModelChangeEvent;
                 let user: UserModel = e.value;

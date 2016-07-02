@@ -34,6 +34,22 @@ namespace Framework.Model {
         public global: TGlobal;
         public users: ModelList<TUser>;
         private TUserClass: any;
+        private filename: string;
+
+        public saveModel() {
+            if ( this.filename ) {
+                let w: any = window;
+                w.writeFile(this.filename, this.save());
+            }
+        }
+
+        public saveModelOnChange() {
+            this.addEventListener("change", () => this.saveModel());
+        }
+
+        public saveModelEvery(millis: number) {
+            setInterval(() => this.saveModel(), millis);
+        }
 
         public addUser(user: User) {
             let model: TUser = new this.TUserClass();
@@ -41,13 +57,21 @@ namespace Framework.Model {
             this.users.push(model);
         }
 
-        public constructor(TGlobal: any, TUser: any) {
+        public constructor(TGlobal: any, TUser: any, filename?: string) {
             super();
             this.global = new TGlobal();
             this.users = new ModelList<TUser>(TUser);
             this.TUserClass = TUser;
             this.initField(this.global, "global");
             this.initField(this.users, "users");
+            if ( filename ) {
+                let w: any = window;
+                let saved: string = w.readFile(filename);
+                if ( saved ) {
+                    this.load(JSON.parse(saved));
+                }
+                this.filename = filename;
+            }
         }
     }
 }
