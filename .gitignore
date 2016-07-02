@@ -2,6 +2,8 @@
 *.js.map
 *.d.ts
 *.secret
+*.log
+*.tgz
 tmp/
 node_modules/
 bower_components/
