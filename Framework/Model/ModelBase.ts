@@ -49,6 +49,7 @@ namespace Framework.Model {
                     this.setFieldValue(key, val);
                     this.initField(val, key);
                 }
+                this.fieldChanged(key, val);
             } else {
                 let sub: ModelBase = this.getFieldValue(key.substr(0, i));
                 sub.setField(key.substr(i + 1), val);
