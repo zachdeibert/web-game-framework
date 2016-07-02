@@ -215,6 +215,7 @@ namespace Framework.Graphics {
         public constructor() {
             super();
             this.borderRadius = 0;
+            this.bounds = new Rectangle();
             this.repaintPeriod = -1;
             this.repaintHandle = -1;
             this.focused = false;

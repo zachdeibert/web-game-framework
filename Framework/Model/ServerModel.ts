@@ -46,6 +46,8 @@ namespace Framework.Model {
             this.global = new TGlobal();
             this.users = new ModelList<TUser>(TUser);
             this.TUserClass = TUser;
+            this.initField(this.global, "global");
+            this.initField(this.users, "users");
         }
     }
 }

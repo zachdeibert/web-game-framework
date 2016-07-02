@@ -57,6 +57,7 @@ namespace Framework.Graphics {
             if ( this.views.indexOf(view) < 0 ) {
                 this.views.push(view);
                 view.setParent(this);
+                view.setBounds(this.getBounds());
             }
         }
 
@@ -67,6 +68,7 @@ namespace Framework.Graphics {
         }
 
         public setBounds(rect: Rectangle) {
+            super.setBounds(rect);
             for ( var i: number = 0; i < this.views.length; ++i ) {
                 this.views[i].setBounds(rect);
             }

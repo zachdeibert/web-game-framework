@@ -47,13 +47,20 @@ namespace Game {
             let view: View = new View("exampleView");
             let lbl: Label = new Clock();
             lbl.setBounds(new Rectangle(new Point(100, 100), new Dimension(320, 480)));
-            view.setBounds(new Rectangle(new Point(0, 0), new Dimension(640, 480)));
             lbl.setBackground(new Color(255, 0, 0, 0.75));
             view.setBackground(new Color(0, 255, 0));
             view.addEventListener("click", () => view.setBackground(new Color(0, 0, 255)));
             view.add(lbl);
             view.addConstraint(new Constraint(view, ConstrainedProperty.left, lbl, ConstrainedProperty.left, 5));
             view.addConstraint(new Constraint(view, ConstrainedProperty.top, lbl, ConstrainedProperty.top, 5));
+            let lbl2: Label = new Label("Connecting...");
+            model.addEventListener("change", () => {
+                lbl2.setText(`You are user #${model.user.userId} of ${model.global.numUsers}`);
+            });
+            lbl2.setBounds(new Rectangle(new Point(0, 0), new Dimension(400, 20)));
+            view.add(lbl2);
+            view.addConstraint(new Constraint(lbl, ConstrainedProperty.left, lbl2, ConstrainedProperty.left, 0));
+            view.addConstraint(new Constraint(lbl, ConstrainedProperty.bottom, lbl2, ConstrainedProperty.top, 5));
             frame.add(view);
             frame.openView("exampleView");
             let e: DOMEvents = new DOMEvents(frame);

@@ -56,7 +56,10 @@ namespace Framework.Graphics {
 
         public paint(g: RenderContext) {
             for ( var i: number = 0; i < this.repaintingChildren.length; ++i ) {
-                this.repaintingChildren[i].update(g.drawIn(this.repaintingChildren[i].getBounds()));
+                let sub: RenderContext = g.drawIn(this.repaintingChildren[i].getBounds());
+                if ( sub != null ) {
+                    this.repaintingChildren[i].update(sub);
+                }
             }
             this.repaintingChildren = [];
         }

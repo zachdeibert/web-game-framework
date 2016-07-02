@@ -34,6 +34,8 @@ namespace Framework.Model {
             super();
             this.global = new TGlobal();
             this.user = new TUser();
+            this.initField(this.global, "global");
+            this.initField(this.user, "user");
         }
     }
 }
