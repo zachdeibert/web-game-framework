@@ -91,7 +91,7 @@ namespace Framework.Model {
             let me: any = this;
             for ( var key in this ) {
                 var val: any = me[key];
-                if ( typeof(val) != "function" && key != "listeners" && key != "listenerObjects" ) {
+                if ( typeof(val) != "function" && key != "listeners" && key != "listenerObjects" && key != "parent" && key != "parentName" ) {
                     Object.defineProperty(this, key, new ModelProperty(key, val, (v: any, k: string) => {
                         this.initField(v, k);
                         this.fieldChanged(k);

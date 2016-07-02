@@ -104,10 +104,39 @@ namespace Framework.Network {
             }
         }
 
+        public sendUser(sock: ISocketSendCallback, model: UserModel | GlobalModel, path: string) {
+            let m: any = model;
+            for ( var key in model ) {
+                if ( typeof(m[key]) != "function" && key != "listeners" && key != "listenerObjects" && key != "parent" && key != "parentName" ) {
+                    sock({
+                        "type": "model_update",
+                        "path": path + "." + key,
+                        "value": m[key]
+                    });
+                }
+            }
+        }
+
         public clientMessage(e: SocketEvent) {
             let w: any = window;
             if ( e.data.authToken ) {
                 this.auth.serverAuth(w.serverInfo.auth, e.data.authToken, e.send, user => {
+                    for ( var i: number = 0; i < this.users.length; ++i ) {
+                        if ( this.users[i].id == user.id ) {
+                            this.users[i].name = user.name;
+                            this.users[i].token = user.token;
+                            if ( this.model != null ) {
+                                for ( var j: number = 0; j < this.model.users.length; ++j ) {
+                                    let model: UserModel = this.model.users.get(j);
+                                    if ( model.user == this.users[j] ) {
+                                        this.sendUser(e.send, model, "user");
+                                        this.sendUser(e.send, this.model.global, "global");
+                                    }
+                                }
+                            }
+                            return;
+                        }
+                    }
                     this.users.push(user);
                     if ( this.model != null ) {
                         this.model.addUser(user);
