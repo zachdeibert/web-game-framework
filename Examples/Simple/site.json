@@ -1,6 +1,7 @@
 {
     "title": "Example Game",
     "main": "Game.Main",
+    "server": "Game.Server",
     "auth": {
         "type": "Framework.Auth.GoogleAuth",
         "clientID": "65893262954-beu3ooql92t25a1ior7k29l925i5t29p.apps.googleusercontent.com",

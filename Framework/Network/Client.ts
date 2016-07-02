@@ -21,19 +21,30 @@
 // SOFTWARE.
 
 /// <reference path="../EventDispatcher.ts" />
+/// <reference path="../FrameworkEvent.ts" />
+/// <reference path="../Model/ClientModel.ts" />
+/// <reference path="../Model/GlobalModel.ts" />
+/// <reference path="../Model/UserModel.ts" />
+/// <reference path="INetworkSide.ts" />
+/// <reference path="SocketEvent.ts" />
 
 namespace Framework.Network {
+    import ClientModel = Framework.Model.ClientModel;
     import EventDispatcher = Framework.EventDispatcher;
+    import FrameworkEvent = Framework.FrameworkEvent;
+    import GlobalModel = Framework.Model.GlobalModel;
+    import UserModel = Framework.Model.UserModel;
 
-    export class Client extends EventDispatcher {
+    export class Client extends EventDispatcher implements INetworkSide<ClientModel<GlobalModel, UserModel>> {
         private sock: WebSocket;
+        private model: ClientModel<GlobalModel, UserModel>;
 
         public ensureOpen(callback?: () => void) {
             if ( this.sock == null || (this.sock.readyState != WebSocket.CONNECTING && this.sock.readyState != WebSocket.OPEN) ) {
                 this.sock = new WebSocket("ws://" + location.hostname + "/", "web-game-framework");
                 this.sock.addEventListener("close", e => this.dispatchEvent(e));
                 this.sock.addEventListener("error", e => this.dispatchEvent(e));
-                this.sock.addEventListener("message", e => this.dispatchEvent(new SocketEvent("message", (data: any) => this.send(data), location.hostname, JSON.parse(e.data))));
+                this.sock.addEventListener("message", e => this.dispatchEvent(new SocketEvent("data", (data: any) => this.send(data), location.hostname, JSON.parse(e.data))));
                 this.sock.addEventListener("open", e => this.dispatchEvent(e));
             }
             if ( callback ) {
@@ -49,13 +60,28 @@ namespace Framework.Network {
             }
         }
 
-        public send(data: any) {
+        public send(data: any): void {
             this.ensureOpen(() => this.sock.send(JSON.stringify(data)));
+        }
+
+        public setModel(model: ClientModel<GlobalModel, UserModel>): void {
+            this.model = model;
+        }
+
+        public serverMessage(e: SocketEvent) {
+            if ( e.data.type == "model_update" && this.model != null ) {
+                this.model.setField(e.data.path, e.data.value);
+            }
         }
 
         public addEventListener(type: string, listener: EventListener | EventListenerObject, useCapture?: boolean) {
             super.addEventListener(type, listener, useCapture);
             this.ensureOpen();
+        }
+
+        public constructor() {
+            super();
+            this.addEventListener("data", (e: FrameworkEvent) => this.serverMessage(e as SocketEvent));
         }
     }
 }

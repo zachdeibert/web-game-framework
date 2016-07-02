@@ -25,26 +25,93 @@
 /// <reference path="../Auth/User.ts" />
 /// <reference path="../EventDispatcher.ts" />
 /// <reference path="../FrameworkEvent.ts" />
+/// <reference path="../Model/GlobalModel.ts" />
+/// <reference path="../Model/ModelChangeEvent.ts" />
+/// <reference path="../Model/ServerModel.ts" />
+/// <reference path="../Model/UserModel.ts" />
 /// <reference path="SocketEvent.ts" />
+/// <reference path="INetworkSide.ts" />
 /// <reference path="ISocketSendCallback.ts" />
 
 namespace Framework.Network {
     import AuthFactory = Framework.Auth.AuthFactory;
     import EventDispatcher = Framework.EventDispatcher;
     import FrameworkEvent = Framework.FrameworkEvent;
+    import GlobalModel = Framework.Model.GlobalModel;
     import IAuth = Framework.Auth.IAuth;
+    import ModelChangeEvent = Framework.Model.ModelChangeEvent;
+    import ServerModel = Framework.Model.ServerModel;
     import User = Framework.Auth.User;
+    import UserModel = Framework.Model.UserModel;
 
-    export class Server extends EventDispatcher {
+    export class Server extends EventDispatcher implements INetworkSide<ServerModel<GlobalModel, UserModel>> {
         private auth: IAuth;
         private users: User[];
+        private socks: ISocketSendCallback[];
+        private model: ServerModel<GlobalModel, UserModel>;
+        private unregisterModel: () => void;
+
+        public send(data: any) {
+            for ( var i: number = 0; i < this.socks.length; ++i ) {
+                this.socks[i](data);
+            }
+        }
+
+        public setModel(model: ServerModel<GlobalModel, UserModel>) {
+            if ( this.model ) {
+                this.unregisterModel();
+            } else {
+                this.model = model;
+                let userListeners: EventListener[] = [];
+                let users: UserModel[] = [];
+                let globalListener: EventListener = (ev: FrameworkEvent) => {
+                    let e: ModelChangeEvent = ev as ModelChangeEvent;
+                    this.send({
+                        "type": "model_update",
+                        "path": "global." + e.path,
+                        "value": e.value
+                    });
+                };
+                let userListener: EventListener = (ev: FrameworkEvent) => {
+                    let user: UserModel = (ev as ModelChangeEvent).value;
+                    let listener: EventListener = (ev: FrameworkEvent) => {
+                        let e: ModelChangeEvent = ev as ModelChangeEvent;
+                        this.send({
+                            "type": "model_update",
+                            "path": "user." + e.path,
+                            "value": e.value
+                        });
+                    };
+                    user.addEventListener("change", listener);
+                    users.push(user);
+                    userListeners.push(listener);
+                    let u: any = user;
+                    for ( var key in user ) {
+                        if ( typeof(u[key]) != "function" ) {
+                            u[key] = u[key];
+                        }
+                    }
+                };
+                model.global.addEventListener("change", globalListener);
+                model.users.addEventListener("insert", userListener);
+                this.unregisterModel = () => {
+                    model.global.removeEventListener("change", globalListener);
+                    model.users.removeEventListener("insert", userListener);
+                    while ( users.length > 0 ) {
+                        users.pop().removeEventListener("change", userListeners.pop());
+                    }
+                };
+            }
+        }
 
         public clientMessage(e: SocketEvent) {
             let w: any = window;
             if ( e.data.authToken ) {
                 this.auth.serverAuth(w.serverInfo.auth, e.data.authToken, e.send, user => {
                     this.users.push(user);
-                    console.log("Authenticated " + user.name);
+                    if ( this.model != null ) {
+                        this.model.addUser(user);
+                    }
                 });
             } else if ( e.data.type == "get_user" && e.data.token ) {
                 for ( var i: number = 0; i < this.users.length; ++i ) {
@@ -62,12 +129,20 @@ namespace Framework.Network {
             }
         }
 
+        public run() {
+            let w: any = window;
+            eval("global." + w.serverInfo.server).main(this);
+        }
+
         public constructor() {
             super();
             let w: any = window;
             this.auth = AuthFactory.create(w.serverInfo.auth);
+            this.socks = [];
             this.users = [];
+            this.addEventListener("connect", (e: FrameworkEvent) => this.socks.push((e as SocketEvent).send));
             this.addEventListener("data", (e: FrameworkEvent) => this.clientMessage(e as SocketEvent));
+            this.addEventListener("close", (e: FrameworkEvent) => this.socks.splice(this.socks.indexOf((e as SocketEvent).send), 1));
         }
     }
 }

@@ -30,12 +30,14 @@ namespace Framework.Internal {
         private xmlhttp: XMLHttpRequest;
         public title: string;
         public main: string;
+        public server: string;
         public auth: any;
 
         public load(data: string) {
             let json = JSON.parse(data);
             this.title = json.title;
             this.main = json.main;
+            this.server = json.server;
             this.auth = json.auth;
             this.dispatchEvent(new Event("load"));
         }

@@ -21,8 +21,12 @@
 // SOFTWARE.
 
 /// <reference path="Clock.ts" />
+/// <reference path="GlobalModel.ts" />
+/// <reference path="UserModel.ts" />
 
 namespace Game {
+    import Client = Framework.Network.Client;
+    import ClientModel = Framework.Model.ClientModel;
     import Color = Framework.Graphics.Color;
     import Component = Framework.Graphics.Component;
     import ConstrainedProperty = Framework.Graphics.ConstrainedProperty;
@@ -33,10 +37,13 @@ namespace Game {
     import Label = Framework.Graphics.Label;
     import Point = Framework.Graphics.Point;
     import Rectangle = Framework.Graphics.Rectangle;
+    import User = Framework.Auth.User;
     import View = Framework.Graphics.View;
 
     export class Main {
-        public static main(frame: Frame) {
+        public static main(frame: Frame, client: Client, user: User) {
+            let model: ClientModel<GlobalModel, UserModel> = new ClientModel<GlobalModel, UserModel>(GlobalModel, UserModel);
+            client.setModel(model);
             let view: View = new View("exampleView");
             let lbl: Label = new Clock();
             lbl.setBounds(new Rectangle(new Point(100, 100), new Dimension(320, 480)));

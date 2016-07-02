@@ -204,3 +204,5 @@ wsserver.on("request", req => {
         srv.dispatchEvent(new Framework.Network.SocketEvent("close", callback, conn.remoteAddress, null, desc));
     });
 });
+
+srv.run();

@@ -16,6 +16,7 @@
     ],
     "files": [
         "out.d.ts",
-        "Game/Main.ts"
+        "Game/Main.ts",
+        "Game/Server.ts"
     ]
 }

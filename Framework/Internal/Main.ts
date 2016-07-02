@@ -92,7 +92,6 @@ namespace Framework.Internal {
                 }
                 if ( this.auth != null ) {
                     this.auth.clientAuth(this.info.auth, sock, user => {
-                        console.log("Authenticated " + user.name);
                         eval("window." + this.info.main).main(this.canvas, sock, user);
                     });
                 }
