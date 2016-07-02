@@ -1,6 +1,6 @@
 {
     "name": "web-game-framework",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A framework for developing cross-platform 2d games in a web browser",
     "main": "electron.js",
     "scripts": {

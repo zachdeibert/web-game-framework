@@ -1,7 +1,6 @@
 node_modules/
 Examples/
 .vscode/
-*.d.ts
 *.log
 *.tgz
 
