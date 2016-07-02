@@ -39,10 +39,11 @@ namespace Framework.Network {
     export class Client extends EventDispatcher implements INetworkSide<ClientModel<GlobalModel, UserModel>> {
         private sock: WebSocket;
         private model: ClientModel<GlobalModel, UserModel>;
+        private url: string;
 
         public ensureOpen(callback?: () => void) {
             if ( this.sock == null || (this.sock.readyState != WebSocket.CONNECTING && this.sock.readyState != WebSocket.OPEN) ) {
-                this.sock = new WebSocket("ws://" + location.hostname + "/", "web-game-framework");
+                this.sock = new WebSocket(this.url, "web-game-framework");
                 this.sock.addEventListener("close", e => this.dispatchEvent(e));
                 this.sock.addEventListener("error", e => this.dispatchEvent(e));
                 this.sock.addEventListener("message", e => this.dispatchEvent(new SocketEvent("data", (data: any) => this.send(data), location.hostname, JSON.parse(e.data))));
@@ -87,8 +88,9 @@ namespace Framework.Network {
             this.ensureOpen();
         }
 
-        public constructor() {
+        public constructor(url: string) {
             super();
+            this.url = url;
             this.addEventListener("data", (e: FrameworkEvent) => this.serverMessage(e as SocketEvent));
         }
     }

@@ -84,7 +84,7 @@ namespace Framework.Internal {
             this.info = new SiteInfo();
             this.info.addEventListener("load", () => {
                 document.title = this.info.title;
-                let sock: Client = new Client();
+                let sock: Client = new Client(this.info.websocket);
                 if ( this.info.auth ) {
                     this.auth = AuthFactory.create(this.info.auth);
                 } else {

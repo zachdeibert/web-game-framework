@@ -31,6 +31,7 @@ namespace Framework.Internal {
         public title: string;
         public main: string;
         public server: string;
+        public websocket: string;
         public auth: any;
 
         public load(data: string) {
@@ -38,6 +39,7 @@ namespace Framework.Internal {
             this.title = json.title;
             this.main = json.main;
             this.server = json.server;
+            this.websocket = json.websocket;
             this.auth = json.auth;
             this.dispatchEvent(new Event("load"));
         }
